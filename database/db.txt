@@ -1,0 +1,184 @@
+create database db_acme_filmes_turma_bb;
+use db_acme_filmes_turma_bb;
+
+CREATE TABLE tbl_classificacao (
+	id_classificacao INT NOT NULL AUTO_INCREMENT primary key,
+	faixa_etaria VARCHAR(2) NOT NULL,
+	classificacao VARCHAR(45) NOT NULL,
+	caracteristicas VARCHAR(100) NOT NULL,
+	icone VARCHAR(150) NOT NULL,
+	unique key(id_classificacao)
+    );
+
+CREATE TABLE tbl_filme (
+  id INT NOT NULL AUTO_INCREMENT primary key,
+  nome VARCHAR(80) NOT NULL,
+  sinopse TEXT NOT NULL,
+  duracao TIME NOT NULL,
+  data_lancamento DATE NOT NULL,
+  data_relancamento DATE NULL,
+  valor_unitario FLOAT NOT NULL,
+  foto_capa VARCHAR(160) NOT NULL,
+  id_classificacao INT NOT NULL,
+  constraint FK_CLASSIFICACAO_FILME
+  foreign key (id_classificacao) references tbl_classificacao(id_classificacao),
+  unique key(id),
+  unique index(id)
+);
+
+
+CREATE TABLE tbl_sexo (
+  id_sexo INT NOT NULL AUTO_INCREMENT primary key,
+  sigla VARCHAR(1) NOT NULL,
+  nome VARCHAR(15) NOT NULL,
+  unique key(id_sexo)
+);
+
+
+CREATE TABLE tbl_ator (
+  id_ator INT NOT NULL AUTO_INCREMENT primary KEY,
+  nome VARCHAR(100) NOT NULL,
+  nome_artistico VARCHAR(100) NOT NULL,
+  data_nascimento DATE NOT NULL,
+  data_falecimento DATE NOT NULL,
+  biografia TEXT NOT NULL,
+  foto VARCHAR(160) NOT NULL,
+  id_sexo int not null,
+  constraint FK_SEXO_ATOR
+  foreign key (id_sexo) references tbl_sexo(id_sexo),
+  unique key(id_ator),
+ unique index(id_ator)
+ );
+
+
+CREATE TABLE tbl_filme_ator (
+  id_filme_ator INT NOT NULL AUTO_INCREMENT primary key,
+  id_filme int not null,
+  id_ator int not null,
+  constraint FK_FILME_ATOR
+	foreign key (id_filme) references tbl_filme(id),
+    constraint FK_ATOR_FILME
+	foreign key (id_ator) references tbl_ator(id_ator),
+    unique key(id_filme_ator)
+ );
+
+
+
+CREATE TABLE tbl_genero (
+  id_genero INT NOT NULL AUTO_INCREMENT primary key,
+  nome VARCHAR(45) NOT NULL
+);
+
+CREATE TABLE tbl_filme_genero (
+  id_filme_genero INT NOT NULL AUTO_INCREMENT primary key,
+  id_filme int not null,
+  id_genero int not null,
+  constraint FK_GENERO_FILME
+foreign key (id_genero) references tbl_genero(id_genero),
+constraint FK_FILME_GENERO
+foreign key (id_filme) references tbl_filme(id),
+unique key(id_filme_genero)
+  );
+
+
+
+CREATE TABLE tbl_nacionalidade (
+  id_nacionalidade INT NOT NULL AUTO_INCREMENT primary key,
+  nome VARCHAR(45) NOT NULL,
+  unique key(id_nacionalidade)
+);
+
+
+
+CREATE TABLE tbl_ator_nacionalidade (
+  id_ator_nacionalidade INT NOT NULL AUTO_INCREMENT primary key,
+  id_nacionalidade int not null,
+  constraint FK_NACIONALIDADE_ATOR
+  foreign key (id_nacionalidade) references tbl_nacionalidade(id_nacionalidade),
+  unique key (id_ator_nacionalidade)
+  );
+
+
+CREATE TABLE tbl_diretor(
+  id_diretor INT NOT NULL AUTO_INCREMENT primary key,
+  nome VARCHAR(100) NOT NULL,
+  data_nascimento DATE NOT NULL,
+  data_falecimento DATE NOT NULL,
+  foto VARCHAR(160) NOT NULL,
+  biografia TEXT NOT NULL,
+  id_sexo int not null,
+  constraint FK_SEXO_DIRETOR
+  foreign key (id_sexo) references tbl_sexo(id_sexo),
+  unique key(id_diretor),
+  unique index(id_diretor)
+  );
+
+
+CREATE TABLE tbl_diretor_nacionalidade (
+  id_diretor_nacionalidade INT NOT NULL AUTO_INCREMENT primary key,
+  id_nacionalidade int not null,
+  id_diretor int not null,
+  constraint FK_NACIONALIDADE_DIRETOR
+  foreign key (id_nacionalidade) references tbl_nacionalidade(id_nacionalidade),
+  constraint FK_DIRETOR_NACIONALIDADE
+  foreign key (id_diretor) references tbl_diretor(id_diretor),
+  unique key(id_diretor_nacionalidade)
+  );
+
+
+CREATE TABLE tbl_filme_diretor (
+  id_filme_diretor INT NOT NULL AUTO_INCREMENT primary key,
+  id_filme int not null,
+  id_diretor int not null,
+  constraint FK_FILME_DIRETOR
+	foreign key (id_filme) references tbl_filme(id),
+    constraint FK_DIRETOR_FILME
+    foreign key (id_diretor) references tbl_diretor(id_diretor),
+    unique key(id_filme_diretor)
+  );
+  
+  
+  
+  
+insert into tbl_filme(nome, sinopse, duracao, data_lancamento, data_relancamento, foto_capa, valor_unitario)values
+('MidWay - Batalha em Alto Mar',
+ 'O filme traz a perspectiva de soldados e aviadores (americanos e japoneses) que lutaram bravamente durante a Batalha de Midway, no Oceano Pacífico em junho de 1942. Através de mensagens codificadas, a Marinha Americana conseguiu identificar a localização e o horário dos ataques previstos pela Marinha Imperial Japonesa. Até hoje a disputa é considerada pelos historiadores como um dos pontos mais relevantes para o fim da Segunda Guerra Mundial.',
+ '02:19:00',
+ '2019-11-20',
+ null,
+ 'https://br.web.img3.acsta.net/c_310_420/pictures/19/09/26/09/18/5374630.jpg',
+ '20.00'),
+ 
+('Bastardos Inglórios',
+'Em Bastardos Inglórios, na Segunda Guerra Mundial, a França está ocupada pelos nazistas. O tenente Aldo Raine (Brad Pitt) é o encarregado de reunir um pelotão de soldados de origem judaica, com o objetivo de realizar uma missão suicida contra os alemães. O objetivo é matar o maior número possível de nazistas, da forma mais cruel possível. Paralelamente Shosanna Dreyfuss (Mélanie Laurent) assiste a execução de sua família pelas mãos do coronel Hans Landa (Christoph Waltz), o que faz com que fuja para Paris. Lá ela se disfarça como operadora e dona de um cinema local, enquanto planeja um meio de se vingar.',
+'02:33:00',
+'2009-10-09',
+null,
+'https://br.web.img3.acsta.net/c_310_420/medias/nmedia/18/90/43/36/20096333.jpg',
+'50.00');
+
+show tables;
+desc tbl_filme;
+drop table tbl_teste;
+select * from tbl_filme;
+
+select * from tbl_filme where nome like 'M%';
+
+select * from tbl_genero order by id_genero desc;
+
+insert into tbl_genero ( 
+            nome
+    ) values (
+                'Suspense'
+    );
+    
+    select * from tbl_genero where id_genero = 1;
+    delete from tbl_genero WHERE id_genero = 3;
+    
+    select cast(last_insert_id() AS DECIMAL) as id_genero from tbl_genero limit 1;
+    
+    UPDATE tbl_genero SET nome = 'Comédia'
+                where tbl_genero.id_genero = 5;
+    
+  
+  
