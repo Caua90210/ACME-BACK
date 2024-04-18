@@ -7,27 +7,29 @@
 
 // Import do arquivo responsavel pela interação com DB(model)
 const { application } = require('express')
-const filmesDAO = require('../model/DAO/filme.js')
+const atorDAO = require('../model/DAO/ator.js')
+const sexoDAO = require('../model/DAO/sexo.js')
+const nacionalidadeDAO = require('../model/DAO/nacionalidade.js')
 // Import do arquivo de configuração do projeto
 const message = require('../modulo/config.js')
 const { join } = require('@prisma/client/runtime/library.js')
 const { json } = require('body-parser')
 
 // Função para inserir um novo filme
-const setInserirNovoFilme = async function(dadosFilme, contentType){
+const setInserirNovoAtor = async function(dadosFilme, contentType){
 
     try{
         // Validação de content-type (apenas aplication/json)
         if(String(contentType).toLowerCase() == 'application/json'){
     
             // Cria o objeto JSON para devolver os dados criados na requisição
-                let novoFilmeJSON = {}
+                let novoAtorJSON = {}
             
                 //Validação de campos obrigatórios ou com digitação inválida
-                if(dadosFilme.nome == ''                  || dadosFilme.nome == undefined            || dadosFilme.nome == null            || dadosFilme.nome.length > 80             || 
-                dadosFilme.sinopse == ''                  || dadosFilme.sinopse == undefined         || dadosFilme.sinopse == null         || dadosFilme.sinopse.length > 65000       ||
-                dadosFilme.duracao == ''                  || dadosFilme.duracao == undefined         || dadosFilme.duracao == null         || dadosFilme.duracao.length > 8           ||
-                dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.data_lancamento == null || dadosFilme.data_lancamento.length != 10 ||
+                if(dadosAtor.nome == ''                  || dadosAtor.nome == undefined            || dadosAtor.nome == null            || dadosAtor.nome.length > 80             || 
+                dadosAtor.sinopse == ''                  || dadosAtor.sinopse == undefined         || dadosAtor.sinopse == null         || dadosAtor.sinopse.length > 65000       ||
+                dadosAtor.duracao == ''                  || dadosAtor.duracao == undefined         || dadosAtor.duracao == null         || dadosAtor.duracao.length > 8           ||
+                dadosAtor.data_lancamento == ''          || dadosAtor.data_lancamento == undefined || dadosFilme.data_lancamento == null || dadosFilme.data_lancamento.length != 10 ||
                 dadosFilme.foto_capa == ''                || dadosFilme.foto_capa == undefined       || dadosFilme.foto_capa == null       || dadosFilme.foto_capa.length > 200       ||
                 dadosFilme.id_classificacao == ''         || dadosFilme.id_classificacao == undefined       || dadosFilme.id_classificacao == null ||
                 dadosFilme.valor_unitario.length > 6
@@ -210,27 +212,39 @@ const setExcluirFilme = async function(id){
 }
 
 // Função para listar filmes
-const getListarFilmes = async function(){
+const getListarAtores = async function(){
 
     // Cria um objeto JSON chama a função DAO que retorna os filmes do banco 
-    let filmesJSON = {}
+    let atorJSON = {}
 
-    let dadosFilmes = await filmesDAO.selectAllFilmes()
+    let dadosAtor = await atorDAO.selectAllAtores()
 
-    if(dadosFilmes == '' || dadosFilmes == undefined){
+    if(dadosAtor == '' || dadosAtor == undefined){
         return message.ERROR_INVALID_ID // 400
     }else{
 
          // Validação para verificar se o DAO retornou dados
-    if(dadosFilmes){
+    if(dadosAtor){
 
-        if(dadosFilmes.length > 0){
+        if(dadosAtor.length > 0){
             // Cria o JSON para retornar para o APP
-            filmesJSON.filmes = dadosFilmes
-            filmesJSON.quantidade = dadosFilmes.length
-            filmesJSON.status_code = 200
+
+            for(let atores of dadosAtor){
+                let sexoAtor = await sexoDAO.selectSexoById(atores.id_sexo)
+                delete atores.id_sexo
+                atores.sexo = sexoAtor
+            }
+            // for(let nacionaliadades of dadosNacionalidade){
+            //     let nacionalidadeAtor = await nacionalidadeDAO.selectNacionalidaeById(nacionaliadades.id_nacionalidade)
+            //     delete nacionaliadades.id_nacionalidade
+            //     atores.nacionaliadade = nacionaliadadeAtor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             bbbb
+            // }
+           
+            atorJSON.ator = dadosAtor
+            atorJSON.quantidade = dadosAtor.length
+            atorJSON.status_code = 200
     
-            return filmesJSON
+            return atorJSON
         }else{
             return message.ERROR_NOT_FOUND // 404
         }
@@ -315,10 +329,10 @@ const getNomeFilme = async function(nome){
 
 
 module.exports = {
-    setInserirNovoFilme,
+    setInserirNovoAtor,
     setAtualizarFilme,
     setExcluirFilme,
-    getListarFilmes,
+    getListarAtores,
     getBuscarFilme,
     getNomeFilme
 }
