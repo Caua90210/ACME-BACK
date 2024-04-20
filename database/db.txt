@@ -5,7 +5,7 @@ CREATE TABLE tbl_classificacao (
 	id_classificacao INT NOT NULL AUTO_INCREMENT primary key,
 	faixa_etaria VARCHAR(2) NOT NULL,
 	classificacao VARCHAR(45) NOT NULL,
-	caracteristicas VARCHAR(100) NOT NULL,
+	caracteristicas VARCHAR(150) NOT NULL,
 	icone VARCHAR(150) NOT NULL,
 	unique key(id_classificacao)
     );
@@ -46,8 +46,8 @@ CREATE TABLE tbl_sexo (
 
 insert into tbl_sexo(sigla, nome) values(
 	'M',
-    'Masculino'
-);
+    'Masculino'),
+	('F','Feminino');
 
 desc tbl_ator;
 select * from tbl_sexo order by id_sexo desc; 
@@ -58,7 +58,7 @@ CREATE TABLE tbl_ator (
   nome VARCHAR(100) NOT NULL,
   nome_artistico VARCHAR(100) NOT NULL,
   data_nascimento DATE NOT NULL,
-  data_falecimento DATE NOT NULL,
+  data_falecimento DATE,
   biografia TEXT NOT NULL,
   foto VARCHAR(160) NOT NULL,
   id_sexo int not null,
@@ -68,15 +68,15 @@ CREATE TABLE tbl_ator (
  unique index(id_ator)
  );
  
- insert into tbl_ator(nome, nome_artistico, data_nascimento,data_falecimento, biografia, foto, id_sexo ) values(
-		'Cillian Murphy',
-        'Oppenheimer',
+ insert into tbl_diretor(nome, data_nascimento,data_falecimento, biografia, foto, id_sexo ) values(
+		'teste',
         '1976-05-25',
          null,
         'teste',
         'https://br.web.img3.acsta.net/r_1280_720/pictures/17/05/24/16/35/013898.jpg',
 		1
  );
+ select * from tbl_diretor;
 
 
 CREATE TABLE tbl_filme_ator (
@@ -117,25 +117,49 @@ CREATE TABLE tbl_nacionalidade (
 );
 
 insert into tbl_nacionalidade(nome) values(
-	'brasileiro'
-);
+	'brasileiro(a)'
+),
+(
+	'americano(a)'
+)
+	
+
+;
+
+select * from tbl_nacionalidade;
+
+
 select * from tbl_nacionalidade order by id_nacionalidade desc;
 select * from tbl_nacionalidade where id_nacionalidade = 1;
 
 CREATE TABLE tbl_ator_nacionalidade (
   id_ator_nacionalidade INT NOT NULL AUTO_INCREMENT primary key,
   id_nacionalidade int not null,
+  id_ator int not null,
+  constraint FK_ATOR_NACIONALIDADE
+  foreign key (id_ator) references tbl_ator(id_ator), -- Corrigido para referenciar a coluna correta
   constraint FK_NACIONALIDADE_ATOR
   foreign key (id_nacionalidade) references tbl_nacionalidade(id_nacionalidade),
   unique key (id_ator_nacionalidade)
-  );
+);
+select * from tbl_diretor;
+
+
+  
+insert into tbl_diretor_nacionalidade(id_diretor, id_nacionalidade) values
+	(4,3),
+    (5,2),
+    (6,4)
+  ;
+  select * from tbl_diretor where id_diretor = 6;
+  
 
 
 CREATE TABLE tbl_diretor(
   id_diretor INT NOT NULL AUTO_INCREMENT primary key,
   nome VARCHAR(100) NOT NULL,
   data_nascimento DATE NOT NULL,
-  data_falecimento DATE NOT NULL,
+  data_falecimento DATE,
   foto VARCHAR(160) NOT NULL,
   biografia TEXT NOT NULL,
   id_sexo int not null,
@@ -156,6 +180,8 @@ CREATE TABLE tbl_diretor_nacionalidade (
   foreign key (id_diretor) references tbl_diretor(id_diretor),
   unique key(id_diretor_nacionalidade)
   );
+  
+
 
 
 CREATE TABLE tbl_filme_diretor (
@@ -172,6 +198,7 @@ CREATE TABLE tbl_filme_diretor (
   
   
   
+  
 insert into tbl_filme(nome, sinopse, duracao, data_lancamento, data_relancamento, foto_capa, valor_unitario, id_classificacao)values
 ('MidWay - Batalha em Alto Mar',
  'O filme traz a perspectiva de soldados e aviadores (americanos e japoneses) que lutaram bravamente durante a Batalha de Midway, no Oceano Pacífico em junho de 1942. Através de mensagens codificadas, a Marinha Americana conseguiu identificar a localização e o horário dos ataques previstos pela Marinha Imperial Japonesa. Até hoje a disputa é considerada pelos historiadores como um dos pontos mais relevantes para o fim da Segunda Guerra Mundial.',
@@ -179,19 +206,19 @@ insert into tbl_filme(nome, sinopse, duracao, data_lancamento, data_relancamento
  '2019-11-20',
  null,
  'https://br.web.img3.acsta.net/c_310_420/pictures/19/09/26/09/18/5374630.jpg',
- '20.00', 3),
+ '20.00', 1),
 ('Bastardos Inglórios',
 'Em Bastardos Inglórios, na Segunda Guerra Mundial, a França está ocupada pelos nazistas. O tenente Aldo Raine (Brad Pitt) é o encarregado de reunir um pelotão de soldados de origem judaica, com o objetivo de realizar uma missão suicida contra os alemães. O objetivo é matar o maior número possível de nazistas, da forma mais cruel possível. Paralelamente Shosanna Dreyfuss (Mélanie Laurent) assiste a execução de sua família pelas mãos do coronel Hans Landa (Christoph Waltz), o que faz com que fuja para Paris. Lá ela se disfarça como operadora e dona de um cinema local, enquanto planeja um meio de se vingar.',
 '02:33:00',
 '2009-10-09',
 null,
 'https://br.web.img3.acsta.net/c_310_420/medias/nmedia/18/90/43/36/20096333.jpg',
-'50.00', 3);
+'50.00', 1);
 
 show tables;
-desc tbl_classificacao;
+desc tbl_ator;
 drop table tbl_teste;
-select * from tbl_filme;
+select * from tbl_ator;
 
 select * from tbl_filme where nome like 'M%';
 
@@ -221,7 +248,7 @@ add column data_falecimento date;
   
   select * from tbl_classificacao where id_classificacao = 2;
   
-  delete from tbl_classificacao WHERE id_classificacao = 1;
+  delete from tbl_ator WHERE id_ator = 3;
   
   select cast(last_insert_id() AS DECIMAL) as id_classificacao from tbl_classificacao limit 1;
   
@@ -232,5 +259,63 @@ add column data_falecimento date;
                 caracteristicas = '${dadosClassificacao.caracteristicas}',
                 icone  = 'laskldw'
                 where tbl_classificacao.id_classificacao = 3;
+                
+SELECT 
+    tbl_ator.id_ator,
+    tbl_ator.nome AS nome_ator,
+    tbl_ator_nacionalidade.id_nacionalidade,
+    tbl_nacionalidade.nome AS nome_nacionalidade
+FROM 
+    tbl_ator
+INNER JOIN 
+    tbl_ator_nacionalidade ON tbl_ator.id_ator = tbl_ator_nacionalidade.id_ator
+INNER JOIN 
+    tbl_nacionalidade ON tbl_ator_nacionalidade.id_nacionalidade = tbl_nacionalidade.id_nacionalidade;
+
+    DELETE FROM tbl_ator_nacionalidade
+WHERE id_ator = 3 AND id_nacionalidade = 2;
+
+select * from tbl_ator;
+
+DELETE FROM tbl_ator
+WHERE id_ator= 3;
+
+		select n.nome from tbl_ator_nacionalidade as i
+        join tbl_nacionalidade as n on i.id_nacionalidade=n.id
+        join tbl_ator as a on i.id_ator=a.id
+        where a.id=1;
+
+SELECT n.nome 
+FROM tbl_ator_nacionalidade AS i
+JOIN tbl_nacionalidade AS n ON i.id_nacionalidade = n.id_nacionalidade
+JOIN tbl_ator AS a ON i.id_ator = a.id_ator
+WHERE a.id_ator = 6;
+
+SELECT n.nome 
+        FROM tbl_ator_nacionalidade AS i
+        JOIN tbl_nacionalidade AS n ON i.id_nacionalidade = n.id_nacionalidade
+        JOIN tbl_ator AS a ON i.id_ator = a.id_ator
+        WHERE a.id_ator = 5;
+
+select * from tbl_ator where id_ator = 4;
+select * from tbl_ator where nome like"%C%";
+delete from tbl_ator where id_ator = 4;
+START TRANSACTION;
+
+DELETE FROM tbl_ator_nacionalidade WHERE id_ator = 4;
+DELETE FROM tbl_ator WHERE id_ator = 4;
+
+COMMIT;
+
+ SELECT n.nome 
+        FROM tbl_diretor_nacionalidade AS i
+        JOIN tbl_nacionalidade AS n ON i.id_nacionalidade = n.id_nacionalidade
+        JOIN tbl_diretor AS a ON i.id_diretor = a.id_diretor
+        WHERE a.id_diretor = 1;
+        
+DELETE FROM tbl_diretor WHERE id_diretor = 1;
+
+DELETE FROM tbl_diretor_nacionalidade WHERE id_diretor = 1;
+
   
   

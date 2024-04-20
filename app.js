@@ -395,29 +395,29 @@ const controllerAtor = require('./controller/controller_ator.js')
     })
 
     //EndPoint: Ele retorna os dados do filme filtrado pelo nome
-    app.get('/v2/acmeFilmes/Filmes/Filtro', cors(), async function(request, response){
+    app.get('/v2/acmeFilmes/ator/Filtro/', cors(), async function(request, response){
         let nome = request.query.nome
-        let dadosFilmes = await controllerFilmes.getNomeFilme(nome)
+        let dadosAtor = await controllerAtor.getNomeAtor(nome)
 
-        response.status(dadosFilmes.status_code)
-        response.json(dadosFilmes)
+        response.status(dadosAtor.status_code)
+        response.json(dadosAtor)
     })
 
     // EndPoint: ele retorna os dados pelo id
-    app.get('/v2/acmeFilmes/filme/:id', cors(), async function(request, response, next){
+    app.get('/v2/acmeFilmes/ator/:id', cors(), async function(request, response, next){
 
         // Recebe o id da requisição
-        let idFilme = request.params.id
+        let idAtor = request.params.id
         // Encaminha o ID para a controller buscar o Filme
-        let dadosFilme = await controllerFilmes.getBuscarFilme(idFilme)
+        let dadosAtor = await controllerAtor.getBuscarAtorID(idAtor)
 
         //
-        response.status(dadosFilme.status_code)
-        response.json(dadosFilme)
+        response.status(dadosAtor.status_code)
+        response.json(dadosAtor)
     })
 
     //EndPoint: Ele insere dados sobre o filme
-    app.post('/v2/acmeFilmes/filme', cors(), bodyParserJSON, async function(request, response){
+    app.post('/v2/acmeFilmes/ator', cors(), bodyParserJSON, async function(request, response){
 
         // Recebe o content-type da requisição
         let contentType = request.headers['content-type']
@@ -426,20 +426,20 @@ const controllerAtor = require('./controller/controller_ator.js')
         let dadosBody = request.body
 
         //Encaminha os dados para a controller enviar para o DAO
-        let resultDadosNovoFilme = await controllerFilmes.setInserirNovoFilme(dadosBody, contentType)
+        let resultDadosNovoAtor = await controllerAtor.setInserirNovoAtor(dadosBody, contentType)
         
-        response.status(resultDadosNovoFilme.status_code)
-        response.json(resultDadosNovoFilme)
+        response.status(resultDadosNovoAtor.status_code)
+        response.json(resultDadosNovoAtor)
     })
 
     //EndPoint: Ele deleta os dados pelo id 
-    app.delete('/v2/acmeFilmes/filme/:id', cors(), async function(request, response, next){
-        let idFilme = request.params.id
+    app.delete('/v2/acmeFilmes/ator/:id', cors(), async function(request, response, next){
+        let idAtor = request.params.id
 
-        let dadosFilme = await controllerFilmes.setExcluirFilme(idFilme)
+        let dadosAtor = await controllerAtor.setExcluirAtor(idAtor)
 
-        response.status(dadosFilme.status_code)
-        response.json(dadosFilme)
+        response.status(dadosAtor.status_code)
+        response.json(dadosAtor)
     })
 
     app.put('/v2/acmeFilmes/filme/:id', cors(), bodyParserJSON, async function(request, response){
@@ -455,6 +455,49 @@ const controllerAtor = require('./controller/controller_ator.js')
 
 
 
+
+
+
+
+    /***********************************************************   DIRETOR   ******************************************************************************* */
+
+    const controllerDiretor = require('./controller/controller_diretor.js')
+
+    // -> EndPoint: Versão 2.0 - Retorna os dados de filme do Banco de Dados
+    app.get('/v1/acmeFilmes/diretores', cors(), async function(request, response){
+
+
+        // -> Chama a função da controller para retornar todos os filmes
+        let dadosDiretor= await controllerDiretor.getListarDiretores()
+
+        // -> validação para verificar se existem dados a serem retornados
+        response.status(dadosDiretor.status_code)
+        response.json(dadosDiretor)
+    })
+
+     // EndPoint: ele retorna os dados pelo id
+     app.get('/v2/acmeFilmes/diretor/:id', cors(), async function(request, response, next){
+
+        // Recebe o id da requisição
+        let IdDiretor = request.params.id
+        // Encaminha o ID para a controller buscar o Filme
+        let dadosDiretor = await controllerDiretor.getBuscarDiretorID(IdDiretor)
+
+        //
+        response.status(dadosDiretor.status_code)
+        response.json(dadosDiretor)
+    })
+
+
+
+    app.delete('/v2/acmeFilmes/diretor/:id', cors(), async function(request, response, next){
+        let IdDiretor = request.params.id
+
+        let dadosDiretor = await controllerDiretor.setExcluirDiretor(IdDiretor)
+
+        response.status(dadosDiretor.status_code)
+        response.json(dadosDiretor)
+    })
 
     app.listen('8080', function(){
         console.log('API funcionando!!')

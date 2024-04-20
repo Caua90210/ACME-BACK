@@ -40,9 +40,7 @@ const insertAtor = async function(dadosAtor){
                                           '${dadosAtor.id_sexo}'
                 )`
 
-        }
-        
-        else{
+        }else{
             
             sql = `insert into tbl_ator (
                 nome, 
@@ -52,16 +50,16 @@ const insertAtor = async function(dadosAtor){
                 biografia,
                 foto,
                 id_sexo      
-                )values(
-                           '${dadosAtor.nome}',
-                            '${dadosAtor.nome_artistico}',
-                            '${dadosAtor.data_nascimento}',
-                            null,
-                            '${dadosAtor.biografia}',
-                            '${dadosAtor.foto}',
-                             '${dadosAtor.id_sexo}'
+)values(
+    '${dadosAtor.nome}',
+    '${dadosAtor.nome_artistico}',
+    '${dadosAtor.data_nascimento}',
+    null,
+    '${dadosAtor.biografia}',
+    '${dadosAtor.foto}',
+    '${dadosAtor.id_sexo}'
     
-                )`
+)`
         }
 
              //$executeRawUnsafe() -> serve para executar scripts sem retorno de dados 
@@ -126,25 +124,25 @@ try{
 
 
 // Função para excluir um filme no banco de dados;
-const deleteAtor = async function(id){
+const deleteDiretor = async function(id){
     try {
         const sql = `
-        DELETE FROM tbl_ator WHERE id_ator = ${id};
+        DELETE FROM tbl_diretor WHERE id_diretor = ${id};
         `
-        let rsAtor = await prisma.$executeRawUnsafe(sql)
-        return rsAtor
+        let rsDiretor = await prisma.$executeRawUnsafe(sql)
+        return rsDiretor
 
     } catch (error) {
         return false
     }
 }
-const deleteAtorNacionalidade = async function(id){
+const deleteDiretorNacionalidade = async function(id){
     try {
         const sql = `
-        DELETE FROM tbl_ator_nacionalidade WHERE id_ator = ${id}
+        DELETE FROM tbl_diretor_nacionalidade WHERE id_diretor = ${id}
         `
-        let rsAtor = await prisma.$executeRawUnsafe(sql)
-        return rsAtor
+        let rsDiretor = await prisma.$executeRawUnsafe(sql)
+        return rsDiretor
 
     } catch (error) {
         return false
@@ -152,14 +150,14 @@ const deleteAtorNacionalidade = async function(id){
 }
 
 // Função para listar todos os filmes do banco de dados;
-const selectAllAtores = async function(){
+const selectAllDiretores = async function(){
     try {
-        let sql = 'select * from tbl_ator'
+        let sql = 'select * from tbl_diretor'
     
         // $queryRawUnsafe(sql)
         // $queryRawUnsafe('select * from tbl_filme')
-        let rsAtor = await prisma.$queryRawUnsafe(sql) 
-        return rsAtor
+        let rsDiretor = await prisma.$queryRawUnsafe(sql) 
+        return rsDiretor
     } catch (error) {
         return false
     }
@@ -169,27 +167,28 @@ const selectAllAtores = async function(){
 }
 
 // Função para buscar um filme do banco de dados pelo ID;
-const selectByIdAtor = async function(id){
+const selectByIdDiretor = async function(id){
 
     try {
         // Script sql para buscar o filme pelo id
-        const sql = `select * from tbl_ator where id_ator = ${id}`
+        const sql = `select * from tbl_diretor where id_diretor = ${id}`
     
         // Caminha o script sql para o banco de dados
-        let rsAtor = await prisma.$queryRawUnsafe(sql)
-    
-        return rsAtor
+
+        let rsDiretor= await prisma.$queryRawUnsafe(sql)
+       
+        return rsDiretor
     } catch (error) {
         return false
     }
 
 }
 
-const selectNameAtores = async function(nome){
+const selectNameDiretor = async function(nome){
     try {
-        let sql = `select * from tbl_ator where nome like"%${nome}%"`
-        let rsAtor = await prisma.$queryRawUnsafe(sql)
-        return rsAtor
+        let sql = `select * from tbl_diretor where nome like"%${nome}%"`
+        let rsDiretor = await prisma.$queryRawUnsafe(sql)
+        return rsDiretor
     } catch (error) {
         return false
     }
@@ -198,9 +197,9 @@ const selectNameAtores = async function(nome){
 
 }
 
-const IDAtor = async function(){
+const IdDiretor = async function(){
     try {
-        let sql = `select cast(last_insert_id() as DECIMAL) as id from tbl_ator limit 1`
+        let sql = `select cast(last_insert_id() as DECIMAL) as id from tbl_diretor limit 1`
 
         let sqlID = await prisma.$queryRawUnsafe(sql)
 
@@ -215,10 +214,10 @@ const IDAtor = async function(){
 module.exports = {
     insertAtor,
     updateAtor,
-    deleteAtor,
-    selectAllAtores,
-    selectByIdAtor,
-    selectNameAtores,
-    deleteAtorNacionalidade,
-    IDAtor
+    deleteDiretor,
+    selectAllDiretores,
+    selectByIdDiretor,
+    selectNameDiretor,
+    deleteDiretorNacionalidade,
+    IdDiretor
 }

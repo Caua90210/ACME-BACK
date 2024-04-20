@@ -7,7 +7,7 @@
 
 // Import do arquivo responsavel pela interação com DB(model)
 const { application } = require('express')
-const atorDAO = require('../model/DAO/ator.js')
+const diretorDAO = require('../model/DAO/diretor.js')
 const sexoDAO = require('../model/DAO/sexo.js')
 const nacionalidadeDAO = require('../model/DAO/nacionalidade.js')
 // Import do arquivo de configuração do projeto
@@ -98,16 +98,16 @@ const setInserirNovoAtor = async function(dadosAtor, contentType){
 
 
 // Função para atualizar um filme
-const setAtualizarAtor = async function(idAtor, dadoAtualizado, contentType){
+const setAtualizarFilme = async function(idFilme, dadoAtualizado, contentType){
     try{
 
         // Validação de content-type (apenas aplication/json)
         if(String(contentType).toLowerCase() == 'application/json'){
-            let dadosID = atorDAO.selectByIdAtor()
+            let dadosID = filmesDAO.selectByIdFilme()
             
-            if(idAtor == '' || idAtor == undefined || idAtor == isNaN(idFilme) || idAtor == null){
+            if(idFilme == '' || idFilme == undefined || idFilme == isNaN(idFilme) || idFilme == null){
                 return message.ERROR_INVALID_ID
-            }else if(idAtor > dadosID.length){
+            }else if(idFilme>dadosID.length){
                 return message.ERROR_NOT_FOUND
             }else{
                 // Cria o objeto JSON para devolver os dados criados na requisição
@@ -188,19 +188,19 @@ const setAtualizarAtor = async function(idAtor, dadoAtualizado, contentType){
 
 
 // Função para excluir um filme
-const setExcluirAtor = async function(id){
+const setExcluirDiretor = async function(id){
 
     try {
-        let idAtor = id
+        let IdDiretor = id
     
-        if(idAtor == '' || idAtor == undefined || idAtor == isNaN(idAtor) || idAtor == null){
+        if(IdDiretor == '' || IdDiretor == undefined || IdDiretor == isNaN(IdDiretor) || IdDiretor== null){
             return message.ERROR_INVALID_ID
         }else{
             
-            let dadosAtor = await atorDAO.deleteAtor(idAtor)
-            let dadosAtorDelete = await atorDAO.deleteAtorNacionalidade(idAtor)
+            let dadosDiretor = await diretorDAO.deleteDiretor(IdDiretor)
+            let dadosDiretorDelete = await diretorDAO.deleteDiretorNacionalidade(IdDiretor)
 
-            if(dadosAtor || dadosAtorDelete){
+            if(dadosDiretor || dadosDiretorDelete){
                 return message.SUCCESS_DELETED_ITEM
             }else{
               return message.ERROR_NOT_FOUND
@@ -214,36 +214,36 @@ const setExcluirAtor = async function(id){
 }
 
 // Função para listar filmes
-const getListarAtores = async function(){
+const getListarDiretores = async function(){
 
     // Cria um objeto JSON chama a função DAO que retorna os filmes do banco 
-    let atorJSON = {}
+    let diretorJSON = {}
 
-    let dadosAtor = await atorDAO.selectAllAtores()
+    let dadosDiretor = await diretorDAO.selectAllDiretores()
 
-    if(dadosAtor == '' || dadosAtor == undefined){
+    if(dadosDiretor == '' || dadosDiretor == undefined){
         return message.ERROR_INVALID_ID // 400
     }else{
 
          // Validação para verificar se o DAO retornou dados
-    if(dadosAtor){
+    if(dadosDiretor){
 
-        if(dadosAtor.length > 0){
+        if(dadosDiretor.length > 0){
             // Cria o JSON para retornar para o APP
 
-            for(let atores of dadosAtor){
-                let sexoAtor = await sexoDAO.selectSexoById(atores.id_sexo)
-                let nacionaliadadeAtor = await nacionalidadeDAO.selectAtorNacionalidade(atores.id_ator)
-                delete atores.id_sexo
-                atores.sexo = sexoAtor
-                atores.nacionalidade = nacionaliadadeAtor
+            for(let diretores of dadosDiretor){
+                let sexoDiretor = await sexoDAO.selectSexoById(diretores.id_sexo)
+                let nacionaliadadeDiretor = await nacionalidadeDAO.selectDiretorNacionalidade(diretores.id_diretor)
+                delete diretores.id_sexo
+                diretores.sexo = sexoDiretor
+                diretores.nacionalidade = nacionaliadadeDiretor
             }          
             
-            atorJSON.ator = dadosAtor
-            atorJSON.quantidade = dadosAtor.length
-            atorJSON.status_code = 200
+            diretorJSON.diretor = dadosDiretor
+            diretorJSON.quantidade = dadosDiretor.length
+            diretorJSON.status_code = 200
     
-            return atorJSON
+            return diretorJSON
         }else{
             return message.ERROR_NOT_FOUND // 404
         }
@@ -257,41 +257,42 @@ const getListarAtores = async function(){
 }
 
 // Função para buscar filme
-const getBuscarAtorID = async function(id){
+const getBuscarDiretorID = async function(id){
 
     // Recebe o id do filme
-    let idAtor = id
+    let IdDiretor = id
 
     //Cria o objeto JSON
-    let atorJSON = {}
+    let diretorJSON = {}
 
 
     //Validação para verificar se o id é válido(Vazio, indefinido e não numérico)
-    if(idAtor == '' || idAtor == undefined || isNaN(idAtor)){
+    if(IdDiretor == '' || IdDiretor == undefined || isNaN(IdDiretor)){
         return message.ERROR_INVALID_ID // 400
     }else{
 
         //Encaminha para o DAO localizar o id do filme 
-        let dadosAtor = await atorDAO.selectByIdAtor(idAtor)
+        let dadosDiretor = await diretorDAO.selectByIdDiretor(IdDiretor)
+
 
 
         // Validação para verificar se existem dados de retorno
-        if(dadosAtor){
+        if(dadosDiretor){
            
             // Validação para verificar a quantidade de itens encontrados.
-            if(dadosAtor.length > 0){
-                for(let atores of dadosAtor){
-                    let sexoAtor = await sexoDAO.selectSexoById(atores.id_sexo)
-                    let nacionaliadadeAtor = await nacionalidadeDAO.selectAtorNacionalidade(atores.id_ator)
-                    delete atores.id_sexo
-                    atores.sexo = sexoAtor
-                    atores.nacionalidade = nacionaliadadeAtor
-                }    
+            if(dadosDiretor.length > 0){
+                for(let diretores of dadosDiretor){
+                    let sexoDiretor = await sexoDAO.selectSexoById(diretores.id_sexo)
+                    let nacionaliadadeDiretor = await nacionalidadeDAO.selectDiretorNacionalidade(diretores.id_diretor)
+                    delete diretores.id_sexo
+                    diretores.sexo = sexoDiretor
+                    diretores.nacionalidade = nacionaliadadeDiretor
+                }     
                 //Criar o JSON de retorno
-                atorJSON.ator = dadosAtor
-                atorJSON.status_code = 200
+                diretorJSON.diretor = dadosDiretor
+                diretorJSON.status_code = 200
     
-                return atorJSON
+                return diretorJSON
             }else{
                 return message.ERROR_NOT_FOUND // 404
             }
@@ -336,9 +337,9 @@ const getNomeAtor = async function(nome){
 
 module.exports = {
     setInserirNovoAtor,
-    setAtualizarAtor,
-    setExcluirAtor,
-    getListarAtores,
-    getBuscarAtorID,
+    setAtualizarFilme,
+    setExcluirDiretor,
+    getListarDiretores,
+    getBuscarDiretorID,
     getNomeAtor
 }
