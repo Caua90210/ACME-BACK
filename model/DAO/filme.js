@@ -42,14 +42,15 @@ const insertFilme = async function(dadosFilme){
 
         }else{
             
-            sql = `insert into tbl_filme (nome, 
+            sql = `insert into tbl_filme (
+                nome, 
                 sinopse,
                 duracao,
                 data_lancamento,
                 data_relancamento,
                 foto_capa,
                 valor_unitario,
-                id_classficacao        
+                id_classificacao        
 )values(
                "${dadosFilme.nome}",
                "${dadosFilme.sinopse}",
@@ -68,7 +69,7 @@ const insertFilme = async function(dadosFilme){
 
             console.log(sql)
              let result = await prisma.$executeRawUnsafe(sql)
-    
+            
              if(result){
                 return true
              }else{
@@ -96,9 +97,9 @@ try{
         data_relancamento = '${dadoAtualizado.data_relancamento}',
         foto_capa = '${dadoAtualizado.foto_capa}',
         valor_unitario = '${dadoAtualizado.valor_unitario}',
-        id_classificacao = '${dadoAtualizado.id_classficacao}'
+        id_classificacao = '${dadoAtualizado.id_classificacao}'
         where
-        id = ${id}`
+        tbl_filme.id = ${id}`
     }else{
         sql = `update tbl_filme set 
         nome = "${dadoAtualizado.nome}",
@@ -107,9 +108,9 @@ try{
         data_lancamento = '${dadoAtualizado.data_lancamento}',
         foto_capa = '${dadoAtualizado.foto_capa}',
         valor_unitario = '${dadoAtualizado.valor_unitario}',
-        id_classificacao = '${dadoAtualizado.id_classficacao}'
+        id_classificacao = '${dadoAtualizado.id_classificacao}'
         where
-        id = ${id}`
+        tbl_filme.id = ${id}`
     }
     console.log(sql)
     let result = await prisma.$executeRawUnsafe(sql)

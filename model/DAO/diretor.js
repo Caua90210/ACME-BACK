@@ -15,103 +15,77 @@ const { sqltag } = require('@prisma/client/runtime/library')
 const prisma = new PrismaClient()
 
 // Função para inserir um novo filme no banco de dados;
-const insertAtor = async function(dadosAtor){
+const insertDiretor = async function(dadosDiretor){
 
     let sql
 
-     try {
-        if(dadosAtor.data_falecimento != '' &&
-         dadosAtor.data_falecimento  != null &&
-         dadosAtor.data_falecimento   != undefined){
-             sql = `insert into tbl_ator (  nome, 
-                                            nome_artistico,
-                                            data_nascimento,
-                                            data_falecimento,
-                                            biografia,
-                                            foto,
-                                            id_sexo       
-                )values(
-                                           '${dadosAtor.nome}',
-                                           '${dadosAtor.nome_artistico}',
-                                           '${dadosAtor.data_nascimento}',
-                                           '${dadosAtor.data_falecimento}',
-                                           '${dadosAtor.biografia}',
-                                           '${dadosAtor.foto}',
-                                          '${dadosAtor.id_sexo}'
-                )`
-
-        }else{
-            
-            sql = `insert into tbl_ator (
-                nome, 
-                nome_artistico,
-                data_nascimento,
-                data_falecimento,
-                biografia,
-                foto,
-                id_sexo      
-)values(
-    '${dadosAtor.nome}',
-    '${dadosAtor.nome_artistico}',
-    '${dadosAtor.data_nascimento}',
-    null,
-    '${dadosAtor.biografia}',
-    '${dadosAtor.foto}',
-    '${dadosAtor.id_sexo}'
-    
-)`
+    try {
+        if (dadosDiretor.data_falecimento && dadosDiretor.data_falecimento !== '') {
+            sql = `
+            insert into tbl_diretor(nome, data_nascimento,data_falecimento, biografia, foto, id_sexo ) values(
+                '${dadosDiretor.nome}',
+                '${dadosDiretor.data_nascimento}',
+                '${data_falecimento.data_falecimento}',
+                '${dadosDiretor.biografia}',
+                '${dadosDiretor.foto}',
+                '${dadosDiretor.id_sexo}'
+         )
+            `;
+        } else {
+            sql = `
+                INSERT INTO tbl_diretor (nome, data_nascimento, data_falecimento, biografia, foto, id_sexo)
+                VALUES (
+                    '${dadosDiretor.nome}',
+                    '${dadosDiretor.data_nascimento}',
+                    NULL,
+                    '${dadosDiretor.biografia}',
+                    '${dadosDiretor.foto}',
+                    '${dadosDiretor.id_sexo}'
+                )
+            `;
         }
 
-             //$executeRawUnsafe() -> serve para executar scripts sem retorno de dados 
-               // (insert, update e delete)
-            //$queryRawUnsafe() -> serve para executar scripts com retorno de dados (select)
-            console.log(dadosAtor)
-            console.log(sql)
-             let result = await prisma.$executeRawUnsafe(sql)
-            console.log(result)
-             if(result){
-                return true
-             }else{
-                return false
-             }
-        
-     } catch (error) {
-        
-        return false
-     }
+        console.log(sql);
+        let result = await prisma.$executeRawUnsafe(sql);
+
+        return !!result; // Convertendo para booleano
+
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
 }
 
 // Função para atualizar um filme no banco de dados;
-const updateAtor = async function(id, dadoAtorAtualizado) {
+const updateDiretor = async function(id, dadoDiretorAtualizado) {
+
 let sql
 try{
-    if(dadoAtorAtualizado.data_falecimento != '' &&
-    dadoAtorAtualizado.data_falecimento   != null &&
-    dadoAtorAtualizado.data_falecimento   != undefined){
-        sql = `update tbl_ator set 
-        nome = "${dadoAtorAtualizado.nome}",
-        nome_artistico = "${dadoAtorAtualizado.nome_artistico}",
-        data_nascimento = '${dadoAtorAtualizado.data_nascimento}',
-        data_falecimento = '${dadoAtorAtualizado.data_falecimento}',
-        biografia = '${dadoAtorAtualizado.biografia}',
-        foto = '${dadoAtorAtualizado.foto}',
-        id_sexo = '${dadoAtorAtualizado.id_sexo}'
+    if(dadoDiretorAtualizado.data_falecimento != '' &&
+    dadoDiretorAtualizado.data_falecimento   != null &&
+    dadoDiretorAtualizado.data_falecimento   != undefined){
+        sql = `update tbl_diretor set 
+        nome = '${dadoDiretorAtualizado.nome}',
+        data_nascimento = '${dadoDiretorAtualizado.data_nascimento}',
+        data_falecimento = '${dadoDiretorAtualizado.data_falecimento}',
+        biografia = '${dadoDiretorAtualizado.biografia}',
+        foto = '${dadoDiretorAtualizado.foto}',
+        id_sexo = '${dadoDiretorAtualizado.id_sexo}'
         where
-        id = ${id}`
+        tbl_diretor.id_diretor = ${id}`
     }else{
-        sql = `update tbl_filme set 
-        nome = "${dadoAtorAtualizado.nome}",
-        nome_artistico = "${dadoAtorAtualizado.nome_artistico}",
-        data_nascimento = '${dadoAtorAtualizado.data_nascimento}',
-        biografia = '${dadoAtorAtualizado.biografia}',
-        foto = '${dadoAtorAtualizado.foto}',
-        id_sexo = '${dadoAtorAtualizado.id_sexo}'
+        sql = `update tbl_diretor set 
+        nome = '${dadoDiretorAtualizado.nome}',
+        data_nascimento = '${dadoDiretorAtualizado.data_nascimento}',
+        biografia = '${dadoDiretorAtualizado.biografia}',
+        foto = '${dadoDiretorAtualizado.foto}',
+        id_sexo = '${dadoDiretorAtualizado.id_sexo}'
         where
-        id = ${id}`
+        tbl_diretor.id_diretor = ${id}`
     }
     console.log(sql)
     let result = await prisma.$executeRawUnsafe(sql)
-    
+    console.log(result);
     if(result){
        return true
     }else{
@@ -197,27 +171,27 @@ const selectNameDiretor = async function(nome){
 
 }
 
-const IdDiretor = async function(){
-    try {
-        let sql = `select cast(last_insert_id() as DECIMAL) as id from tbl_diretor limit 1`
+// const IdDiretor = async function(){
+//     try {
+//         let sql = `select cast(last_insert_id() as DECIMAL) as id_diretor from tbl_diretor limit 1`
 
-        let sqlID = await prisma.$queryRawUnsafe(sql)
+//         let sqlID = await prisma.$queryRawUnsafe(sql)
 
-        return sqlID
-    } catch (error) {
-        return false
-    }
+//         return sqlID
+//     } catch (error) {
+//         return false
+//     }
     
-}
+// }
 
 
 module.exports = {
-    insertAtor,
-    updateAtor,
+    insertDiretor,
+    updateDiretor,
     deleteDiretor,
     selectAllDiretores,
     selectByIdDiretor,
     selectNameDiretor,
     deleteDiretorNacionalidade,
-    IdDiretor
+    // IdDiretor
 }

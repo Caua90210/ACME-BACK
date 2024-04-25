@@ -127,6 +127,22 @@ const updateGenero = async function(id,dadosGenero){
     }
 }
 
+const generoFilme = async function(id){
+    try {
+        let sql = `SELECT tbl_genero.nome
+        FROM tbl_filme_genero
+        JOIN tbl_genero ON tbl_filme_genero.id_genero = tbl_genero.id_genero
+        WHERE tbl_filme_genero.id_filme = ${id}`
+
+        console.log(sql)
+        let sqlID = await prisma.$queryRawUnsafe(sql)
+
+        return sqlID
+    } catch (error) {
+        return false
+    }
+}
+
 
 
 
@@ -136,5 +152,6 @@ module.exports = {
     selectGeneroById,
     insertGenero,
     InsertByIdGenero,
-    updateGenero
+    updateGenero,
+    generoFilme
 }

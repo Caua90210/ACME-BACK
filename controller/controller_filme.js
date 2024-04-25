@@ -8,6 +8,8 @@
 // Import do arquivo responsavel pela interação com DB(model)
 const { application } = require('express')
 const filmesDAO = require('../model/DAO/filme.js')
+const classificacaoDAO = require('../model/DAO/classificacao.js')
+const generoDAO = require('../model/DAO/genero.js')
 // Import do arquivo de configuração do projeto
 const message = require('../modulo/config.js')
 const { join } = require('@prisma/client/runtime/library.js')
@@ -29,7 +31,7 @@ const setInserirNovoFilme = async function(dadosFilme, contentType){
                 dadosFilme.duracao == ''                  || dadosFilme.duracao == undefined         || dadosFilme.duracao == null         || dadosFilme.duracao.length > 8           ||
                 dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.data_lancamento == null || dadosFilme.data_lancamento.length != 10 ||
                 dadosFilme.foto_capa == ''                || dadosFilme.foto_capa == undefined       || dadosFilme.foto_capa == null       || dadosFilme.foto_capa.length > 200       ||
-                dadosFilme.id_classificacao == ''         || dadosFilme.id_classificacao == undefined       || dadosFilme.id_classificacao == null ||
+                dadosFilme.id_classificacao == ''         || dadosFilme.id_classificacao == undefined       || dadosFilme.id_classificacao == null || isNaN(dadosFilme.id_classificacao) ||
                 dadosFilme.valor_unitario.length > 6
                 ){
                     return message.ERROR_REQUIRED_FIELDS
@@ -88,7 +90,7 @@ const setInserirNovoFilme = async function(dadosFilme, contentType){
                 return message.ERROR_CONTENT_TYPE //415
             }
     }catch(error){
-        return message.ERROR_INTERNAL_SERVER //500 - erro na controller
+        return message.ERROR_INTERNAL_SERVER //500 
     }
 
     }
@@ -116,7 +118,7 @@ const setAtualizarFilme = async function(idFilme, dadoAtualizado, contentType){
                     dadoAtualizado.duracao == ''                  || dadoAtualizado.duracao == undefined         || dadoAtualizado.duracao == null         || dadoAtualizado.duracao.length > 8           ||
                     dadoAtualizado.data_lancamento == ''          || dadoAtualizado.data_lancamento == undefined || dadoAtualizado.data_lancamento == null || dadoAtualizado.data_lancamento.length != 10 ||
                     dadoAtualizado.foto_capa == ''                || dadoAtualizado.foto_capa == undefined       || dadoAtualizado.foto_capa == null       || dadoAtualizado.foto_capa.length > 200       ||
-                    dadoAtualizado.id_classificacao == ''         || dadoAtualizado.id_classificacao == undefined       || dadoAtualizado.id_classificacao == null       || dadoAtualizado.id_classificacao.length > 1  ||
+                    dadoAtualizado.id_classificacao == ''         || dadoAtualizado.id_classificacao == undefined       || dadoAtualizado.id_classificacao == null       || isNaN(dadoAtualizado.id_classificacao)  ||
                     dadoAtualizado.valor_unitario.length > 6
                     ){
                         return message.ERROR_REQUIRED_FIELDS
@@ -225,6 +227,16 @@ const getListarFilmes = async function(){
     if(dadosFilmes){
 
         if(dadosFilmes.length > 0){
+
+            
+            for(let filmes of dadosFilmes){
+                let classifyFilmes = await classificacaoDAO.selectClassificacaoById(filmes.id_classificacao)
+                let generoFilme = await generoDAO.generoFilme(filmes.id)
+                delete filmes.id_classificacao
+                filmes.classificacao = classifyFilmes  
+                filmes.genero = generoFilme
+            }
+            
             // Cria o JSON para retornar para o APP
             filmesJSON.filmes = dadosFilmes
             filmesJSON.quantidade = dadosFilmes.length
@@ -268,6 +280,14 @@ const getBuscarFilme = async function(id){
             // Validação para verificar a quantidade de itens encontrados.
             if(dadosFilme.length > 0){
                 //Criar o JSON de retorno
+
+                for(let filmes of dadosFilme){
+                    let classifyFilmes = await classificacaoDAO.selectClassificacaoById(filmes.id_classificacao)
+                    let generoFilme = await generoDAO.generoFilme(filmes.id)
+                    delete filmes.id_classificacao
+                    filmes.classificacao = classifyFilmes  
+                    filmes.genero = generoFilme
+                }
                 filmesJSON.filmes = dadosFilme
                 filmesJSON.status_code = 200
     

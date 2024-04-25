@@ -378,7 +378,7 @@ app.get('/v2/filmesAcme/sexo/:id', cors(), async function(request,response,next)
 
 
 
-/********************************** V3 DOS ENDPOINTS ********************************************/
+/********************************** ATOR ********************************************/
 
 const controllerAtor = require('./controller/controller_ator.js')
 
@@ -442,15 +442,15 @@ const controllerAtor = require('./controller/controller_ator.js')
         response.json(dadosAtor)
     })
 
-    app.put('/v2/acmeFilmes/filme/:id', cors(), bodyParserJSON, async function(request, response){
+    app.put('/v2/acmeFilmes/ator/:id', cors(), bodyParserJSON, async function(request, response){
         let contentType = request.headers['content-type']
         let dadosBody = request.body
-        let idFilme = request.params.id
+        let idAtor = request.params.id
 
-        let dadosFilme = await controllerFilmes.setAtualizarFilme(idFilme, dadosBody, contentType)
+        let dadosAtor = await controllerAtor.setAtualizarAtor(idAtor, dadosBody, contentType)
 
-        response.status(dadosFilme.status_code)
-        response.json(dadosFilme)
+        response.status(dadosAtor.status_code)
+        response.json(dadosAtor)
     })
 
 
@@ -462,6 +462,7 @@ const controllerAtor = require('./controller/controller_ator.js')
     /***********************************************************   DIRETOR   ******************************************************************************* */
 
     const controllerDiretor = require('./controller/controller_diretor.js')
+    const { IdDiretor } = require("./model/DAO/diretor")
 
     // -> EndPoint: Versão 2.0 - Retorna os dados de filme do Banco de Dados
     app.get('/v1/acmeFilmes/diretores', cors(), async function(request, response){
@@ -476,7 +477,7 @@ const controllerAtor = require('./controller/controller_ator.js')
     })
 
      // EndPoint: ele retorna os dados pelo id
-     app.get('/v2/acmeFilmes/diretor/:id', cors(), async function(request, response, next){
+     app.get('/v1/acmeFilmes/diretor/:id', cors(), async function(request, response, next){
 
         // Recebe o id da requisição
         let IdDiretor = request.params.id
@@ -494,6 +495,32 @@ const controllerAtor = require('./controller/controller_ator.js')
         let IdDiretor = request.params.id
 
         let dadosDiretor = await controllerDiretor.setExcluirDiretor(IdDiretor)
+
+        response.status(dadosDiretor.status_code)
+        response.json(dadosDiretor)
+    })
+
+    app.post('/v2/acmeFilmes/diretor', cors(), bodyParserJSON, async function(request, response){
+
+        // Recebe o content-type da requisição
+        let contentType = request.headers['content-type']
+
+        //Recebe todos os dados encaminhados na requisição pelo Body
+        let dadosBody = request.body
+
+        //Encaminha os dados para a controller enviar para o DAO
+        let resultDadosNovoDiretor = await controllerDiretor.setInserirNovoDiretor(dadosBody, contentType)
+        
+        response.status(resultDadosNovoDiretor.status_code)
+        response.json(resultDadosNovoDiretor)
+    })
+
+    app.put('/v2/acmeFilmes/diretor/:id', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        let dadosBody = request.body
+        let idDiretor = request.params.id
+
+        let dadosDiretor = await controllerDiretor.setAtualizarDiretor(idDiretor, dadosBody, contentType)
 
         response.status(dadosDiretor.status_code)
         response.json(dadosDiretor)
