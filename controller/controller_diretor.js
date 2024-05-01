@@ -90,7 +90,7 @@ const setInserirNovoDiretor = async function(dadosDiretor, contentType){
                 return message.ERROR_CONTENT_TYPE //415
             }
     }catch(error){
-        return message.ERROR_INTERNAL_SERVER //500 - erro na controller
+        return message.ERROR_INTERNAL_SERVER 
     }
     }
 

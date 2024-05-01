@@ -73,7 +73,7 @@ app.get('/v1/acmeFilmes/filmes', cors(), async function(request, response, next)
 
 
     // -> EndPoint: Versão 2.0 - Retorna os dados de filme do Banco de Dados
-    app.get('/v2/acmeFilmes/filme', cors(), async function(request, response){
+    app.get('/v2/acmeFilmes/filmes', cors(), async function(request, response){
 
 
         // -> Chama a função da controller para retornar todos os filmes
@@ -464,7 +464,7 @@ const controllerAtor = require('./controller/controller_ator.js')
     const controllerDiretor = require('./controller/controller_diretor.js')
     const { IdDiretor } = require("./model/DAO/diretor")
 
-    // -> EndPoint: Versão 2.0 - Retorna os dados de filme do Banco de Dados
+    // -> EndPoint: Versão 2.0 - Retorna os dados de diretores do Banco de Dados
     app.get('/v1/acmeFilmes/diretores', cors(), async function(request, response){
 
 

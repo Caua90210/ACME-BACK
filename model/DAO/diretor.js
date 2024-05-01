@@ -22,10 +22,10 @@ const insertDiretor = async function(dadosDiretor){
     try {
         if (dadosDiretor.data_falecimento && dadosDiretor.data_falecimento !== '') {
             sql = `
-            insert into tbl_diretor(nome, data_nascimento,data_falecimento, biografia, foto, id_sexo ) values(
+            insert into tbl_diretor(nome, data_nascimento , data_falecimento, biografia, foto, id_sexo ) values(
                 '${dadosDiretor.nome}',
                 '${dadosDiretor.data_nascimento}',
-                '${data_falecimento.data_falecimento}',
+                '${dadosDiretor.data_falecimento}',
                 '${dadosDiretor.biografia}',
                 '${dadosDiretor.foto}',
                 '${dadosDiretor.id_sexo}'
