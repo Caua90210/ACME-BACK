@@ -10,6 +10,8 @@ CREATE TABLE tbl_classificacao (
 	unique key(id_classificacao)
     );
     
+    select * from tbl_classificacao;
+    
     select cast(last_insert_id() AS DECIMAL) as id_classificacao from tbl_classificacao limit 1;
     
      insert into tbl_classificacao(faixa_etaria, classificacao, caracteristicas, icone )values
@@ -77,6 +79,17 @@ CREATE TABLE tbl_ator (
 		1
  );
  select * from tbl_diretor;
+ 
+  insert into tbl_ator(nome, nome_artistico , data_nascimento, data_falecimento, biografia, foto, id_sexo ) values(
+		'teste',
+        'teste',
+        '1976-05-25',
+         null,
+        'teste',
+        'https://br.web.img3.acsta.net/r_1280_720/pictures/17/05/24/16/35/013898.jpg',
+		1
+ );
+ select * from tbl_ator;
 
 
 CREATE TABLE tbl_filme_ator (
@@ -90,12 +103,18 @@ CREATE TABLE tbl_filme_ator (
     unique key(id_filme_ator)
  );
 
+SELECT tbl_genero.nome
+        FROM tbl_filme_genero
+        JOIN tbl_genero ON tbl_filme_genero.id_genero = tbl_genero.id_genero
+        WHERE tbl_filme_genero.id_filme = 1;
 
-
+select * from tbl_filme_genero;
 CREATE TABLE tbl_genero (
   id_genero INT NOT NULL AUTO_INCREMENT primary key,
   nome VARCHAR(45) NOT NULL
 );
+
+select * from tbl_genero;
 
 CREATE TABLE tbl_filme_genero (
   id_filme_genero INT NOT NULL AUTO_INCREMENT primary key,
@@ -107,6 +126,10 @@ constraint FK_FILME_GENERO
 foreign key (id_filme) references tbl_filme(id),
 unique key(id_filme_genero)
   );
+  
+  insert into tbl_filme_genero (id_filme, id_genero) values(1,5);
+  
+  
 
 
 
@@ -121,10 +144,7 @@ insert into tbl_nacionalidade(nome) values(
 ),
 (
 	'americano(a)'
-)
-	
-
-;
+);
 
 select * from tbl_nacionalidade;
 
@@ -137,21 +157,24 @@ CREATE TABLE tbl_ator_nacionalidade (
   id_nacionalidade int not null,
   id_ator int not null,
   constraint FK_ATOR_NACIONALIDADE
-  foreign key (id_ator) references tbl_ator(id_ator), -- Corrigido para referenciar a coluna correta
+  foreign key (id_ator) references tbl_ator(id_ator),
   constraint FK_NACIONALIDADE_ATOR
   foreign key (id_nacionalidade) references tbl_nacionalidade(id_nacionalidade),
   unique key (id_ator_nacionalidade)
 );
 select * from tbl_diretor;
+select * from tbl_filme;
 
-
+select * from tbl_nacionalidade order by id_nacionalidade desc;
   
-insert into tbl_diretor_nacionalidade(id_diretor, id_nacionalidade) values
-	(4,3),
-    (5,2),
-    (6,4)
+insert into tbl_filme_diretor(id_diretor, id_filme) values
+	(1,16),
+    (2,1)
   ;
+  
   select * from tbl_diretor where id_diretor = 6;
+  
+  select * from tbl_filme_genero;
   
 
 
@@ -196,7 +219,7 @@ CREATE TABLE tbl_filme_diretor (
   );
   
   
-  
+  select * from tbl_ator;
   
   
 insert into tbl_filme(nome, sinopse, duracao, data_lancamento, data_relancamento, foto_capa, valor_unitario, id_classificacao)values
@@ -206,19 +229,19 @@ insert into tbl_filme(nome, sinopse, duracao, data_lancamento, data_relancamento
  '2019-11-20',
  null,
  'https://br.web.img3.acsta.net/c_310_420/pictures/19/09/26/09/18/5374630.jpg',
- '20.00', 1),
+ '20.00', 3),
 ('Bastardos Inglórios',
 'Em Bastardos Inglórios, na Segunda Guerra Mundial, a França está ocupada pelos nazistas. O tenente Aldo Raine (Brad Pitt) é o encarregado de reunir um pelotão de soldados de origem judaica, com o objetivo de realizar uma missão suicida contra os alemães. O objetivo é matar o maior número possível de nazistas, da forma mais cruel possível. Paralelamente Shosanna Dreyfuss (Mélanie Laurent) assiste a execução de sua família pelas mãos do coronel Hans Landa (Christoph Waltz), o que faz com que fuja para Paris. Lá ela se disfarça como operadora e dona de um cinema local, enquanto planeja um meio de se vingar.',
 '02:33:00',
 '2009-10-09',
 null,
 'https://br.web.img3.acsta.net/c_310_420/medias/nmedia/18/90/43/36/20096333.jpg',
-'50.00', 1);
+'50.00', 3);
 
 show tables;
 desc tbl_ator;
 drop table tbl_teste;
-select * from tbl_ator;
+select * from tbl_classificacao;
 
 select * from tbl_filme where nome like 'M%';
 
@@ -230,8 +253,9 @@ insert into tbl_genero (
                 'Suspense'
     );
     
+    select *from tbl_classificacao;
     select * from tbl_genero where id_genero = 1;
-    delete from tbl_genero WHERE id_genero = 3;
+    delete from tbl_classificacao WHERE id_classificacao = 3;
     
     select cast(last_insert_id() AS DECIMAL) as id_genero from tbl_genero limit 1;
     
@@ -289,13 +313,13 @@ SELECT n.nome
 FROM tbl_ator_nacionalidade AS i
 JOIN tbl_nacionalidade AS n ON i.id_nacionalidade = n.id_nacionalidade
 JOIN tbl_ator AS a ON i.id_ator = a.id_ator
-WHERE a.id_ator = 6;
+WHERE a.id_ator = 1;
 
 SELECT n.nome 
         FROM tbl_ator_nacionalidade AS i
         JOIN tbl_nacionalidade AS n ON i.id_nacionalidade = n.id_nacionalidade
         JOIN tbl_ator AS a ON i.id_ator = a.id_ator
-        WHERE a.id_ator = 5;
+        WHERE a.id_ator = 3;
 
 select * from tbl_ator where id_ator = 4;
 select * from tbl_ator where nome like"%C%";
@@ -307,15 +331,37 @@ DELETE FROM tbl_ator WHERE id_ator = 4;
 
 COMMIT;
 
- SELECT n.nome 
-        FROM tbl_diretor_nacionalidade AS i
-        JOIN tbl_nacionalidade AS n ON i.id_nacionalidade = n.id_nacionalidade
-        JOIN tbl_diretor AS a ON i.id_diretor = a.id_diretor
-        WHERE a.id_diretor = 1;
-        
+
 DELETE FROM tbl_diretor WHERE id_diretor = 1;
 
 DELETE FROM tbl_diretor_nacionalidade WHERE id_diretor = 1;
 
   
-  
+  INSERT INTO tbl_ator_nacionalidade (id_nacionalidade, id_ator)
+VALUES (1, 1);
+
+
+update tbl_diretor set 
+        nome = '${dadoDiretorAtualizado.nome}',
+        data_nascimento = '2000-01-01',
+        data_falecimento = null,
+        biografia = '${dadoDiretorAtualizado.biografia}',
+        foto = '${dadoDiretorAtualizado.foto}',
+        id_sexo = 1
+        where
+        tbl_diretor.id_diretor = 3;
+        
+        select cast(last_insert_id() as DECIMAL) as id_diretor from tbl_diretor limit 1;
+        
+
+    
+
+        
+SELECT d.nome AS nome_diretor
+FROM tbl_filme_diretor AS fd
+JOIN tbl_diretor AS d ON fd.id_diretor = d.id_diretor
+WHERE fd.id_filme = 16;
+
+
+
+    
