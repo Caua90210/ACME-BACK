@@ -197,13 +197,60 @@ const IDFilme = async function(){
     
 }
 
+const filmeDiretor = async function(id){
+    try {
+        let sql = `
+        SELECT d.nome AS nome_diretor
+        FROM tbl_filme_diretor AS fd
+        JOIN tbl_diretor AS d ON fd.id_diretor = d.id_diretor
+        WHERE fd.id_filme = ${id}`
+
+        let rsNacionalidade = await prisma.$queryRawUnsafe(sql);
+        return rsNacionalidade;
+        
+    } catch (error) {
+        return false;
+    }
+}
+
+const filmeAtor = async function(id){
+    try {
+        let sql = `
+        SELECT d.nome AS nome_ator
+        FROM tbl_filme_ator AS fd
+        JOIN tbl_ator AS d ON fd.id_ator = d.id_ator
+        WHERE fd.id_filme = ${id}`
+
+        let rsNacionalidade = await prisma.$queryRawUnsafe(sql);
+        return rsNacionalidade;
+        
+    } catch (error) {
+        return false;
+    }
+}
+
+const deleteDiretorFilme = async function(id){
+    try {
+        const sql = `
+        DELETE FROM tbl_filme_diretor WHERE id_diretor = ${id}
+        `
+        let rsDiretor = await prisma.$executeRawUnsafe(sql)
+        return rsDiretor
+
+    } catch (error) {
+        return false
+    }
+}
 
 module.exports = {
+    filmeDiretor,
+    filmeAtor,
     insertFilme,
     updateFilme,
     deleteFilme,
     selectAllFilmes,
     selectByIdFilme,
     selectNameFilmes,
-    IDFilme
+    IDFilme,
+    deleteDiretorFilme
 }

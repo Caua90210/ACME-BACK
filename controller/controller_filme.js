@@ -197,8 +197,9 @@ const setExcluirFilme = async function(id){
         }else{
     
             let dadosFilme = await filmesDAO.deleteFilme(idFilme)
+            let apagarDiretorFilme = await filmesDAO.deleteDiretorFilme(idFilme)
     
-            if(dadosFilme){
+            if(dadosFilme || apagarDiretorFilme ){
                 return message.SUCCESS_DELETED_ITEM
             }else{
               return message.ERROR_NOT_FOUND
@@ -232,9 +233,13 @@ const getListarFilmes = async function(){
             for(let filmes of dadosFilmes){
                 let classifyFilmes = await classificacaoDAO.selectClassificacaoById(filmes.id_classificacao)
                 let generoFilme = await generoDAO.generoFilme(filmes.id)
+                let diretorFilme = await filmesDAO.filmeDiretor(filmes.id)
+                let atorFilme = await filmesDAO.filmeAtor(filmes.id)
                 delete filmes.id_classificacao
                 filmes.classificacao = classifyFilmes  
                 filmes.genero = generoFilme
+                filmes.diretor = diretorFilme
+                filmes.ator = atorFilme
             }
             
             // Cria o JSON para retornar para o APP

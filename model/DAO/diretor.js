@@ -171,6 +171,8 @@ const selectNameDiretor = async function(nome){
 
 }
 
+
+
 // const IdDiretor = async function(){
 //     try {
 //         let sql = `select cast(last_insert_id() as DECIMAL) as id_diretor from tbl_diretor limit 1`

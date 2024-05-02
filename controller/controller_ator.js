@@ -314,13 +314,13 @@ const getNomeAtor = async function(nome){
     if(nomeAtor == '' || nomeAtor == undefined){
         return message.ERROR_INVALID_ID // 400
     }else{
-        let dadosFilmes = await atorDAO.selectNameAtores(nome)
+        let dadosAtor = await atorDAO.selectNameAtores(nome)
     
         if(dadosAtor){
     
             if(dadosAtor.length > 0){
-                atorJSON.nome = dadosFilmes
-                atorJSON.quantidade = dadosFilmes.length
+                atorJSON.nome = dadosAtor
+                atorJSON.quantidade = dadosAtor.length
                 atorJSON.status_code = 200
                 
                 return atorJSON

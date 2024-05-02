@@ -133,8 +133,6 @@ const generoFilme = async function(id){
         FROM tbl_filme_genero
         JOIN tbl_genero ON tbl_filme_genero.id_genero = tbl_genero.id_genero
         WHERE tbl_filme_genero.id_filme = ${id}`
-
-        console.log(sql)
         let sqlID = await prisma.$queryRawUnsafe(sql)
 
         return sqlID
