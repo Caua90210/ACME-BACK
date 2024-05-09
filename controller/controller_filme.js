@@ -24,7 +24,7 @@ const setInserirNovoFilme = async function(dadosFilme, contentType){
     
             // Cria o objeto JSON para devolver os dados criados na requisição
                 let novoFilmeJSON = {}
-                let lastID
+               
             
                 //Validação de campos obrigatórios ou com digitação inválida
                 if(dadosFilme.nome == ''                  || dadosFilme.nome == undefined            || dadosFilme.nome == null            || dadosFilme.nome.length > 80             || 

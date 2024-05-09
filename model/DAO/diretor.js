@@ -191,11 +191,9 @@ const selectNameDiretor = async function(nome){
 
 }
 
-
-
 const IdDiretor = async function(){
     try {
-        let sql = `SELECT id_diretor FROM tbl_diretor ORDER BY id_diretor DESC LIMIT 1`
+        let sql = `SELECT id FROM tbl_filme ORDER BY id DESC LIMIT 1`
 
         let sqlID = await prisma.$queryRawUnsafe(sql)
 
@@ -204,6 +202,22 @@ const IdDiretor = async function(){
         return false
     }
     
+}
+
+const insertDiretorFilme = async function(dadosDiretor) {
+    try {
+        let sql = `insert into tbl_filme_diretor(
+            id_filme, id_diretor
+            )values
+            (${dadosDiretor.id_filme},
+            ${dadosDiretor.id_diretor})`
+        let diretor = await prisma.$executeRawUnsafe(sql)
+        if (diretor) {
+            return true
+        }
+    } catch (error) {
+        return false
+    }
 }
 
 
@@ -215,5 +229,6 @@ module.exports = {
     selectByIdDiretor,
     selectNameDiretor,
     deleteDiretorNacionalidade,
-    IdDiretor
+    IdDiretor,
+    insertDiretorFilme
 }

@@ -77,12 +77,42 @@ const selectDiretorNacionalidade = async function(id){
     }
 }
 
+const insertNacionalidadeDiretor = async function(dadosNacionalidade) {
+    try {
+        let sql = `insert into tbl_diretor_nacionalidade(
+            id_diretor, id_nacionalidade
+            )values
+            (${dadosNacionalidade.id_diretor},
+            ${dadosNacionalidade.id_nacionalidade})`
+        let nacionalidade = await prisma.$queryRawUnsafe(sql)
+       if(nacionalidade){
+        return true
+       }
+    } catch (error) {
+        return false
+    }
+}
+const insertNacionalidadeAtor = async function(dadosNacionalidade) {
+    try {
+        let sql = `insert into tbl_ator_nacionalidade(
+            id_ator, id_nacionalidade
+            )values
+            (${dadosNacionalidade.id_ator},
+            ${dadosNacionalidade.id_nacionalidade})`
+        let nacionalidade = await prisma.$executeRawUnsafe(sql)
+        return nacionalidade;
+    } catch (error) {
+        return false
+    }
+}
+
 
 module.exports = {
     selectAllNacionalidades,
     selectNacionalidaeById,
     selectAtorNacionalidade,
-    selectDiretorNacionalidade
-    
+    selectDiretorNacionalidade,
+    insertNacionalidadeDiretor,
+    insertNacionalidadeAtor
 
 }

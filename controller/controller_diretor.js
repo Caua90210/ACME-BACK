@@ -336,6 +336,57 @@ const getNomeAtor = async function(nome){
 
 }
 
+const setInserirFilmeDiretor = async function(dadosDiretor, contentType){
+    
+    try{
+        if(String(contentType).toLowerCase() == 'application/json'){
+    
+        let diretorJSON = {};
+        
+    
+        // validação de campos obrigatorios ou com digitação inválida
+        if(dadosDiretor.id_filme == '' ||dadosDiretor.id_filme == undefined || isNaN(dadosDiretor.id_filme) || 
+        dadosDiretor.id_diretor == '' ||dadosDiretor.id_diretor == undefined || isNaN(dadosDiretor.id_diretor)         
+        ){
+            // return do status code 400
+            return message.ERROR_INVALID_ID
+        
+        } else {
+    
+            let validateStatus = true;
+    
+         // validação para verificar se podemos encaminhar os dados para o DA0
+         if(validateStatus){
+    
+            // Encaminha os dados do filme para o DAO inserir dados
+            let novoFilmeDiretor = await nacionalidadesDAO.insertNacionalidadeAtor(dadosNacionalidade);
+    
+            
+    
+            // validação para verificar se o DAO inseriu os dados do BD
+            if (novoFilmeDiretor){
+                // se inseriu cria o JSON dos dados (201)
+                diretorJSON.diretor  = dadosDiretor
+                diretorJSON.status = message.SUCCESS_CREATED_ITEM.status
+                diretorJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
+                diretorJSON.message = message.SUCCESS_CREATED_ITEM.message 
+    
+                return diretorJSON // 201
+            }else{
+             
+                return message.ERROR_INTERNAL_SERVER_DB // 500
+                }
+            }   
+          }
+        } else {
+            return message.ERROR_CONTENT_TYPE // 415
+        }
+    } catch(error){
+        return message.ERROR_INTERNAL_SERVER // 500
+    }
+    
+}
+
 
 module.exports = {
     setInserirNovoDiretor,
@@ -343,5 +394,6 @@ module.exports = {
     setExcluirDiretor,
     getListarDiretores,
     getBuscarDiretorID,
-    getNomeAtor
+    getNomeAtor,
+    setInserirFilmeDiretor
 }

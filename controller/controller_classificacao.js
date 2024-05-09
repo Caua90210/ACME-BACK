@@ -41,7 +41,7 @@ const getListarClassificacao = async function(){
 }
 }
 
-//função para validar e inserir um novo genero
+//função para validar e inserir uma nova classificação
 const setInserirNovaClassificacao = async function (dadosClassificacao, contentType ){
 
     try{
@@ -105,7 +105,7 @@ const setInserirNovaClassificacao = async function (dadosClassificacao, contentT
 
 }
 
-//função para validar e atualizar um genero
+//função para validar e atualizar uma classificação
 const setAtualizarClassficacao = async function(id, dadosClassificacao, contentType){
     
     try{
@@ -162,7 +162,7 @@ const setAtualizarClassficacao = async function(id, dadosClassificacao, contentT
     }
 }
 
-//funcção para excluir um genero
+//função para excluir uma classificação
 const setExcluirCLassificacao = async function(id){ 
 
     try {
@@ -190,7 +190,7 @@ const setExcluirCLassificacao = async function(id){
         
         
 
-//função para buscar genero pelo ID
+//função para buscar classificação pelo ID
 const getBuscarClassificacaoId = async function (id){
 
     try{

@@ -341,6 +341,36 @@ app.get('/v2/filmesAcme/nacionalidade/:id', cors(), async function(request,respo
 
     response.status(dadosNacionalidade.status_code);
     response.json(dadosNacionalidade);
+});
+
+app.post('/v2/filmesAcme/nacionalidadeDiretor', cors(), bodyParserJSON, async function(request, response){
+
+    // Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Recebe todos os dados encaminhados na requisição pelo Body
+    let dadosBody = request.body
+
+    //Encaminha os dados para a controller enviar para o DAO
+    let resultDadosNacionalidade = await controllerNacionalidade.setInserirNacionalidadeDiretor(dadosBody, contentType)
+    
+    response.status(resultDadosNacionalidade.status_code)
+    response.json(resultDadosNacionalidade)
+})
+
+app.post('/v2/filmesAcme/nacionalidadeAtor', cors(), bodyParserJSON, async function(request, response){
+
+    // Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Recebe todos os dados encaminhados na requisição pelo Body
+    let dadosBody = request.body
+
+    //Encaminha os dados para a controller enviar para o DAO
+    let resultDadosNacionalidade = await controllerNacionalidade.setInserirNacionalidadeAtor(dadosBody, contentType)
+    
+    response.status(resultDadosNacionalidade.status_code)
+    response.json(resultDadosNacionalidade)
 })
 
 // ************************************************************************************************************************************* //
@@ -522,6 +552,21 @@ app.get('/v2/filmesAcme/sexo/:id', cors(), async function(request,response,next)
 
         response.status(dadosDiretor.status_code)
         response.json(dadosDiretor)
+    })
+
+    app.post('/v2/filmesAcme/filmeDiretor', cors(), bodyParserJSON, async function(request, response){
+
+        // Recebe o content-type da requisição
+        let contentType = request.headers['content-type']
+    
+        //Recebe todos os dados encaminhados na requisição pelo Body
+        let dadosBody = request.body
+    
+        //Encaminha os dados para a controller enviar para o DAO
+        let resultDadosNacionalidade = await controllerDiretor.setInserirFilmeDiretor(dadosBody, contentType)
+        
+        response.status(resultDadosNacionalidade.status_code)
+        response.json(resultDadosNacionalidade)
     })
 
     app.listen('8080', function(){
