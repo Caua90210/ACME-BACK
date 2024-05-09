@@ -32,7 +32,8 @@ const setInserirNovoAtor = async function(dadosAtor, contentType){
                 dadosAtor.data_nascimento==''  ||dadosAtor.data_nascimento==undefined  ||dadosAtor.data_nascimento==null       ||dadosAtor.data_nascimento.length!=10 ||
                 dadosAtor.biografia==''        ||dadosAtor.biografia==undefined        ||dadosAtor.biografia==null             ||dadosAtor.biografia.length>65000     ||
                 dadosAtor.foto==''             ||dadosAtor.foto==undefined             ||dadosAtor.foto==null                  ||dadosAtor.foto.length>150            ||
-                dadosAtor.id_sexo==''          ||dadosAtor.id_sexo==undefined          ||dadosAtor.id_sexo==null               ||isNaN(dadosAtor.id_sexo)    
+                dadosAtor.id_sexo==''          ||dadosAtor.id_sexo==undefined          ||dadosAtor.id_sexo==null               ||isNaN(dadosAtor.id_sexo)  ||
+                dadosAtor.id_nacionalidade==''          ||dadosAtor.id_nacionalidade==undefined          ||dadosAtor.id_nacionalidade==null               ||isNaN(dadosAtor.id_nacionalidade)      
                 
                 ){
                     return message.ERROR_REQUIRED_FIELDS//400
@@ -64,7 +65,7 @@ const setInserirNovoAtor = async function(dadosAtor, contentType){
                         
                         if(novoAtor){
                             let idAtores = await atorDAO.IDAtor()
-                            dadosAtor.id = Number(idAtores[0].id)
+                            dadosAtor.id = Number(idAtores[0].id_ator)
                         }
                         
                         console.log()
@@ -154,7 +155,7 @@ const setAtualizarAtor = async function(id, dadoAtualizado, contentType){
                         let atualizarAtor = await atorDAO.updateAtor(dadoAtualizado, idAtor)
                         
                         if(atualizarAtor){
-                            let idAtores = await atorDAO.IDAtor()
+                            let idAtores = await atorDAO.selectByIdAtor(id)
                             dadoAtualizado.id = Number(idAtores[0].id)
                         }
                         

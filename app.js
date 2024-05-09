@@ -57,7 +57,7 @@ app.get('/v1/acmeFilmes/filmes', cors(), async function(request, response, next)
     }
     })
     
-    app.get('/v1/acmeFilmes/filme/:idfilmes', cors(), async function(request, response, next){
+app.get('/v1/acmeFilmes/filme/:idfilmes', cors(), async function(request, response, next){
         let id = request.params.idfilmes
         let filme = info.getFilme(id)
 
@@ -231,14 +231,16 @@ app.put('/v1/filmesAcme/uptadeGenero/:id', cors(), bodyParserJSON, async functio
 // **************************************************************************************************************************************//
 
 
-const controllerClassificacao = require('./controller/controller_classificacao.js')
+        const controllerClassificacao = require('./controller/controller_classificacao.js')
+
+
 //EndPoint : Versão 2.0 - retorna todas as classificacoes do Banco de Dados 
 app.get('/v2/filmesAcme/classificacao', cors(),async function (request,response,next){
 
-    // chama a função da controller para retornar os filmes;
+    // chama a função da controller para retornar as classificações;
     let dadosClassificacao = await controllerClassificacao.getListarClassificacao();
 
-    // validação para retornar o Json dos filmes ou retornar o erro 404;
+    // validação para retornar o Json das classificações ou retornar o erro 404;
     if(dadosClassificacao){
         response.json(dadosClassificacao);
         response.status(200);
@@ -249,13 +251,12 @@ app.get('/v2/filmesAcme/classificacao', cors(),async function (request,response,
 });
 
 
-// endPoint: retorna o genero filtrando pelo ID
+// endPoint: retorna a classificação filtrando pelo ID
 app.get('/v2/filmesAcme/classificacao/:id', cors(), async function(request,response,next){
 
     // recebe o id da requisição
     let idClassificacao = request.params.id
 
-    //encaminha o id para a acontroller buscar o filme
     let dadosClassificacao = await controllerClassificacao.getBuscarClassificacaoId(idClassificacao);
 
     response.status(dadosClassificacao.status_code);
@@ -311,7 +312,8 @@ app.put('/v1/filmesAcme/uptadeClassificacao/:id', cors(), bodyParserJSON, async 
 // ****************************  CRUD DO NACIONALIDADES  ************************************************************
 // **************************************************************************************************************************************//
 
-const controllerNacionalidade = require('./controller/controller_nacionalidade.js')
+        const controllerNacionalidade = require('./controller/controller_nacionalidade.js')
+
 //EndPoint : Versão 2.0 - retorna todas as nacionlidades do Banco de Dados 
 app.get('/v2/filmesAcme/nacionalidades', cors(),async function (request,response,next){
 
@@ -345,7 +347,7 @@ app.get('/v2/filmesAcme/nacionalidade/:id', cors(), async function(request,respo
 // ************************************************************  SEXO  ******************************************************************
 // **************************************************************************************************************************************//
 
-const controllerSexo = require('./controller/controller_sexo.js')
+        const controllerSexo = require('./controller/controller_sexo.js')
 //EndPoint : Versão 2.0 - retorna todas as nacionlidades do Banco de Dados 
 app.get('/v2/filmesAcme/sexos', cors(),async function (request,response,next){
 
@@ -366,21 +368,20 @@ app.get('/v2/filmesAcme/sexos', cors(),async function (request,response,next){
 app.get('/v2/filmesAcme/sexo/:id', cors(), async function(request,response,next){
 
     // recebe o id da requisição
-    let idNacionalidade = request.params.id
+    let idSexo = request.params.id
 
     //encaminha o id para a acontroller buscar o filme
-    let dadosNacionalidade = await controllerNacionalidade.getBuscarNacionalidadeId(idNacionalidade);
+    let dadosSexo = await controllerSexo.getBuscarSexoId(idSexo);
 
-    response.status(dadosNacionalidade.status_code);
-    response.json(dadosNacionalidade);
+    response.status(dadosSexo.status_code);
+    response.json(dadosSexo);
 })
 
+// ************************************************************************************************************************************* //
+// ************************************************************  ATOR  ******************************************************************
+// **************************************************************************************************************************************//
 
-
-
-/********************************** ATOR ********************************************/
-
-const controllerAtor = require('./controller/controller_ator.js')
+    const controllerAtor = require('./controller/controller_ator.js')
 
     // -> EndPoint: Versão 2.0 - Retorna os dados de filme do Banco de Dados
     app.get('/v1/acmeFilmes/atores', cors(), async function(request, response){
@@ -454,13 +455,11 @@ const controllerAtor = require('./controller/controller_ator.js')
     })
 
 
+// ************************************************************************************************************************************* //
+// ************************************************************  DIRETOR  ******************************************************************
+// **************************************************************************************************************************************//
 
-
-
-
-
-    /***********************************************************   DIRETOR   ******************************************************************************* */
-
+    
     const controllerDiretor = require('./controller/controller_diretor.js')
     const { IdDiretor } = require("./model/DAO/diretor")
 
@@ -488,7 +487,6 @@ const controllerAtor = require('./controller/controller_ator.js')
         response.status(dadosDiretor.status_code)
         response.json(dadosDiretor)
     })
-
 
 
     app.delete('/v2/acmeFilmes/diretor/:id', cors(), async function(request, response, next){

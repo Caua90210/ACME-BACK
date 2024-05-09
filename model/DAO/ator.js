@@ -50,6 +50,27 @@ const insertAtor = async function(dadosAtor){
 
         console.log(sql);
         let result = await prisma.$executeRawUnsafe(sql);
+        
+        if(result){
+            let idAtor = await IDAtor()
+            
+            for(let nacionaliadade of dadosAtor.id_nacionalidade){
+                sql=`insert into tbl_ator_nacionalidade(
+                        id_ator,
+                        id_nacionalidade
+                    ) values(
+                        ${idAtor[0].id_ator},
+                        ${nacionaliadade}
+                    )`
+                let result = await prisma.$executeRawUnsafe(sql)
+                
+                if(result)
+                    return true
+                else
+                    return false
+            }
+            return true
+        }
 
         return !!result; // Convertendo para booleano
 
@@ -175,7 +196,7 @@ const selectNameAtores = async function(nome){
 
 const IDAtor = async function(){
     try {
-        let sql = `select cast(last_insert_id() as DECIMAL) as id from tbl_ator limit 1`
+        let sql = `SELECT id_ator FROM tbl_ator ORDER BY id_ator DESC LIMIT 1;`
 
         let sqlID = await prisma.$queryRawUnsafe(sql)
 

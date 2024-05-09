@@ -47,8 +47,28 @@ const insertDiretor = async function(dadosDiretor){
 
         console.log(sql);
         let result = await prisma.$executeRawUnsafe(sql);
+        if(result){
+            let idDiretor=await IdDiretor()
+            
+            for(let nacionaliadade of dadosDiretor.id_nacionalidade){
+                sql=`insert into tbl_diretor_nacionalidade(
+                        id_diretor,
+                        id_nacionalidade
+                    ) values(
+                        ${idDiretor[0].id_diretor},
+                        ${nacionaliadade}
+                    )`
+                let result = await prisma.$executeRawUnsafe(sql)
+                
+                if(result)
+                    return true
+                else
+                    return false
+            }
+            return true
+        }
 
-        return !!result; // Convertendo para booleano
+        return !!result; 
 
     } catch (error) {
         console.error(error);
@@ -173,18 +193,18 @@ const selectNameDiretor = async function(nome){
 
 
 
-// const IdDiretor = async function(){
-//     try {
-//         let sql = `select cast(last_insert_id() as DECIMAL) as id_diretor from tbl_diretor limit 1`
+const IdDiretor = async function(){
+    try {
+        let sql = `SELECT id_diretor FROM tbl_diretor ORDER BY id_diretor DESC LIMIT 1`
 
-//         let sqlID = await prisma.$queryRawUnsafe(sql)
+        let sqlID = await prisma.$queryRawUnsafe(sql)
 
-//         return sqlID
-//     } catch (error) {
-//         return false
-//     }
+        return sqlID
+    } catch (error) {
+        return false
+    }
     
-// }
+}
 
 
 module.exports = {
@@ -195,5 +215,5 @@ module.exports = {
     selectByIdDiretor,
     selectNameDiretor,
     deleteDiretorNacionalidade,
-    // IdDiretor
+    IdDiretor
 }

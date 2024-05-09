@@ -24,6 +24,7 @@ const setInserirNovoFilme = async function(dadosFilme, contentType){
     
             // Cria o objeto JSON para devolver os dados criados na requisição
                 let novoFilmeJSON = {}
+                let lastID
             
                 //Validação de campos obrigatórios ou com digitação inválida
                 if(dadosFilme.nome == ''                  || dadosFilme.nome == undefined            || dadosFilme.nome == null            || dadosFilme.nome.length > 80             || 
@@ -32,7 +33,10 @@ const setInserirNovoFilme = async function(dadosFilme, contentType){
                 dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.data_lancamento == null || dadosFilme.data_lancamento.length != 10 ||
                 dadosFilme.foto_capa == ''                || dadosFilme.foto_capa == undefined       || dadosFilme.foto_capa == null       || dadosFilme.foto_capa.length > 200       ||
                 dadosFilme.id_classificacao == ''         || dadosFilme.id_classificacao == undefined       || dadosFilme.id_classificacao == null || isNaN(dadosFilme.id_classificacao) ||
-                dadosFilme.valor_unitario.length > 6
+                dadosFilme.valor_unitario.length > 6 ||
+                dadosFilme.id_genero == '' || dadosFilme.id_genero == undefined || dadosFilme.id_genero == null || 
+                dadosFilme.id_ator == '' || dadosFilme.id_ator == undefined || dadosFilme.id_ator == null ||
+                dadosFilme.id_diretor == '' || dadosFilme.id_diretor == undefined || dadosFilme.id_diretor == null
                 ){
                     return message.ERROR_REQUIRED_FIELDS
             
@@ -75,6 +79,7 @@ const setInserirNovoFilme = async function(dadosFilme, contentType){
                             novoFilmeJSON.status      = message.SUCCESS_CREATED_ITEM.status
                             novoFilmeJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
                             novoFilmeJSON.message     = message.SUCCESS_CREATED_ITEM.message
+                           
                 
                             return novoFilmeJSON //201
                             
@@ -289,9 +294,13 @@ const getBuscarFilme = async function(id){
                 for(let filmes of dadosFilme){
                     let classifyFilmes = await classificacaoDAO.selectClassificacaoById(filmes.id_classificacao)
                     let generoFilme = await generoDAO.generoFilme(filmes.id)
+                    let diretorFilme = await filmesDAO.filmeDiretor(filmes.id)
+                    let atorFilme = await filmesDAO.filmeAtor(filmes.id)
                     delete filmes.id_classificacao
                     filmes.classificacao = classifyFilmes  
                     filmes.genero = generoFilme
+                    filmes.diretor = diretorFilme
+                    filmes.ator = atorFilme
                 }
                 filmesJSON.filmes = dadosFilme
                 filmesJSON.status_code = 200
