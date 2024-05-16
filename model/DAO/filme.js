@@ -2,7 +2,7 @@
  * Objetivo: Arquivo responsavel pela manipulação de dados MySQL,
  * aqui realizamos o CRUD utilizando a linguagem sql
  * Data: 01/02/2024
- * Autor: Vinicius
+ * Autor: Cauã
  * Versão: 1.0
  ****************************************************************/
 
