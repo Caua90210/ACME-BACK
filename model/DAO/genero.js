@@ -88,6 +88,38 @@ const insertGenero = async function(dadosGenero){
 }
 
 
+const insertGeneroNoFilme = async function(dadosGenero){
+    
+    try {
+    
+        let sql;
+
+         sql = `insert into tbl_filme_genero ( 
+            id_filme,
+            id_genero
+    ) values (
+                '${dadosGenero.id_filme}',
+                '${dadosGenero.id_genero}'
+    )`;
+
+        //$executeRawUnsafe serve para executar scripts sem retorno de dados
+            //(insert, update e delete)
+        //$queryRawUnsafe() - serve para executar scripts com retorno de dados (select)
+        let result = await prisma.$executeRawUnsafe(sql);
+
+        if (result)
+            return true
+        else
+            return false;
+
+        } catch (error) {
+            console.log(error);
+            return false 
+        }
+
+}
+
+
 const InsertByIdGenero = async function (){
     try {
         
@@ -151,5 +183,6 @@ module.exports = {
     insertGenero,
     InsertByIdGenero,
     updateGenero,
-    generoFilme
+    generoFilme,
+    insertGeneroNoFilme
 }

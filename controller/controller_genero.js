@@ -227,10 +227,73 @@ const getBuscarGeneroId = async function (id){
 }
 }
 
+const setInserirNovoGeneroNoFilme = async function (dadosGenero, contentType ){
+
+    try{
+
+    console.log(contentType);
+    // validação para aplicação do contentType
+    if(String(contentType).toLowerCase() == 'application/json'){
+
+    // cria o objeto JSON para devolver os dados criados na requisição
+    let novoGeneroJSON = {};
+    
+
+    
+    // validação de campos obrigatorios ou com digitação inválida
+    if(dadosGenero.id_filme == '' || dadosGenero.id_filme == undefined || isNaN(dadosGenero.id_filme)   ||
+    dadosGenero.id_genero == '' || dadosGenero.id_genero == undefined || isNaN(dadosGenero.id_genero)    
+    ){
+        
+        // return do status code 400
+        return message.ERROR_REQUIRED_FIELDS
+    
+    } else {
+
+        let validateStatus = true;
+
+     // validação para verificar se podemos encaminhar os dados para o DA0
+     if(validateStatus){
+
+        // Encaminha os dados do filme para o DAO inserir dados
+        let novoGenero = await generoDAO.insertGeneroNoFilme(dadosGenero);
+
+        console.log(novoGenero);
+
+        // validação para verificar se o DAO inseriu os dados do BD
+        if (novoGenero)
+        {
+
+            let ultimoId = await generoDAO.InsertByIdGenero ()
+            dadosGenero.id = ultimoId[0].id
+        
+            // se inseriu cria o JSON dos dados (201)
+            novoGeneroJSON.genero  = dadosGenero
+            novoGeneroJSON.status = message.SUCCESS_CREATED_ITEM.status
+            novoGeneroJSON.status_code = message.SUCCESS_CREATED_ITEM.status_code
+            novoGeneroJSON.message = message.SUCCESS_CREATED_ITEM.message 
+
+            return novoGeneroJSON; // 201
+        }else{
+         
+            return message.ERROR_INTERNAL_SERVER_DB // 500
+            }
+        }   
+      }
+    } else {
+        return message.ERROR_CONTENT_TYPE // 415
+    }
+} catch(error){
+    return message.ERROR_INTERNAL_SERVER // 500
+}
+
+}
+
 module.exports = {
     getListarGeneros,
     setInserirNovoGenero,
     setAtualizarGenero,
     setExcluirGenero,
-    getBuscarGeneroId
+    getBuscarGeneroId,
+    setInserirNovoGeneroNoFilme
 }

@@ -199,6 +199,23 @@ app.post('/v2/filmesAcme/genero', cors(), bodyParserJSON, async function (reques
 
 })
 
+app.post('/v2/filmesAcme/generoFilme', cors(), bodyParserJSON, async function (request, response,next ){
+
+    // recebe o ContentType com os tipos de dados encaminhados na requisição
+    let contentType = request.headers['content-type'];
+
+    // vou receber o que chegar no corpo da requisição e guardar nessa variável local
+    let dadosBody = request.body;
+    // encaminha os dados para a controller enviar para o DAO
+    let resultDadosNovoGenero = await controllerGeneros.setInserirNovoGeneroNoFilme(dadosBody,contentType);
+
+
+    console.log(resultDadosNovoGenero)
+    response.status(200);
+    response.json(resultDadosNovoGenero);
+
+})
+
 
 app.delete('/v1/filmesAcme/deleteGenero/:id', cors (), async function (request,response,next){
 
