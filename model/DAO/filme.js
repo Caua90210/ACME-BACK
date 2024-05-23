@@ -70,62 +70,65 @@ const prisma = new PrismaClient()
         let result=await prisma.$executeRawUnsafe(sql)
 
         if(result){
-            let idFilme = await IDFilme()
+        //     let idFilme = await IDFilme()
       
-            for(let genero of dadosFilme.id_genero){
-                sql=`insert into tbl_filme_genero(
-                        id_filme,
-                        id_genero
-                    ) values(
-                        ${idFilme[0].id},
-                        ${genero}
-                    )`
-                let result = await prisma.$executeRawUnsafe(sql)
+        //     for(let genero of dadosFilme.id_genero){
+        //         sql=`insert into tbl_filme_genero(
+        //                 id_filme,
+        //                 id_genero
+        //             ) values(
+        //                 ${idFilme[0].id},
+        //                 ${genero}
+        //             )`
+        //         let result = await prisma.$executeRawUnsafe(sql)
 
-                if(result)
-                    return true
-                else
-                    return false
-            }
+        //         if(result)
+        //             return true
+        //         else
+        //             return false
+        //     }
     
-            for(let ator of dadosFilme.id_ator){
-                sql=`insert into tbl_filme_ator(
-                    id_filme,
-                    id_ator
-                    ) values(
-                        ${idFilme[0].id},
-                        ${ator}
-                    )`
-                let result=await prisma.$executeRawUnsafe(sql)
+        //     for(let ator of dadosFilme.id_ator){
+        //         sql=`insert into tbl_filme_ator(
+        //             id_filme,
+        //             id_ator
+        //             ) values(
+        //                 ${idFilme[0].id},
+        //                 ${ator}
+        //             )`
+        //         let result=await prisma.$executeRawUnsafe(sql)
 
-                if(result)
-                    return true
-                else
-                    return false
-            }
+        //         if(result)
+        //             return true
+        //         else
+        //             return false
+        //     }
      
-            for(let diretor of dadosFilme.id_diretor){
-                sql=`insert into tbl_filme_diretor(
-                    id_filme,
-                    id_diretor
-                    ) values(
-                        ${idFilme[0].id},
-                        ${diretor}
-                    )`
-                let result=await prisma.$executeRawUnsafe(sql)
+        //     for(let diretor of dadosFilme.id_diretor){
+        //         sql=`insert into tbl_filme_diretor(
+        //             id_filme,
+        //             id_diretor
+        //             ) values(
+        //                 ${idFilme[0].id},
+        //                 ${diretor}
+        //             )`
+        //         let result=await prisma.$executeRawUnsafe(sql)
                 
-                if(result)
-                    return true
-                else
-                    return false
-            }
+        //         if(result)
+        //             return true
+        //         else
+        //             return false
+        //     }
          
-            return true
-        }
-        else
+        //     return true
+        // }
+        let result=await prisma.$executeRawUnsafe(sql)
+        return true
+
+        }else
             return false 
                 }
-            }
+    }
               
 
 
@@ -162,16 +165,8 @@ try{
     }
     console.log(sql)
     let result = await prisma.$executeRawUnsafe(sql)
-    
     if(result){
-        let idFilme=await selectByIdFilme()
-        for(filme of dadosFilme.id_genero){
-                let sql
-                sql = `update tbl_filme_`
-        }
        return true
-    }else{
-       return false
     }
 }catch(error){
     return false

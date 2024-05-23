@@ -33,10 +33,11 @@ const setInserirNovoFilme = async function(dadosFilme, contentType){
                 dadosFilme.data_lancamento == ''          || dadosFilme.data_lancamento == undefined || dadosFilme.data_lancamento == null || dadosFilme.data_lancamento.length != 10 ||
                 dadosFilme.foto_capa == ''                || dadosFilme.foto_capa == undefined       || dadosFilme.foto_capa == null       || dadosFilme.foto_capa.length > 200       ||
                 dadosFilme.id_classificacao == ''         || dadosFilme.id_classificacao == undefined       || dadosFilme.id_classificacao == null || isNaN(dadosFilme.id_classificacao) ||
-                dadosFilme.valor_unitario.length > 6 ||
-                dadosFilme.id_genero == '' || dadosFilme.id_genero == undefined || dadosFilme.id_genero == null || 
-                dadosFilme.id_ator == '' || dadosFilme.id_ator == undefined || dadosFilme.id_ator == null ||
-                dadosFilme.id_diretor == '' || dadosFilme.id_diretor == undefined || dadosFilme.id_diretor == null
+                dadosFilme.valor_unitario.length > 6
+                //  ||
+                // dadosFilme.id_genero == '' || dadosFilme.id_genero == undefined || dadosFilme.id_genero == null || 
+                // dadosFilme.id_ator == '' || dadosFilme.id_ator == undefined || dadosFilme.id_ator == null ||
+                // dadosFilme.id_diretor == '' || dadosFilme.id_diretor == undefined || dadosFilme.id_diretor == null
                 ){
                     return message.ERROR_REQUIRED_FIELDS
             
@@ -153,11 +154,11 @@ const setAtualizarFilme = async function(idFilme, dadoAtualizado, contentType){
                             // Encaminha os dados do filme para o DAO inserir no DB
                             let dadosFilme = await filmesDAO.updateFilme(idFilme, dadoAtualizado)
                             
-                            // if(atualizarFilme){
-                            //     let idFilmes = await filmesDAO.IDFilme()
-                            //     console.log(idFilmes)
-                            //     dadoAtualizado.id = Number(idFilmes[0].id)
-                            // }
+                            if(dadoAtualizado){
+                                let idFilmes = await filmesDAO.IDFilme()
+                                console.log(idFilmes)
+                                dadoAtualizado.id = Number(idFilmes[0].id)
+                            }
                     
                             // Validação para verificar se o DAO inseriu os dados do DB
                             if(dadosFilme){
